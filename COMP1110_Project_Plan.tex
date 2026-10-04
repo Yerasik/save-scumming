@@ -25,16 +25,17 @@
 \pagestyle{plain}
 
 \newcommand{\teamtable}{%
-\renewcommand{\arraystretch}{1.12}%
-\begin{tabularx}{\textwidth}{@{}l l X@{}}
+\renewcommand{\arraystretch}{1.28}%
+\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{4.15cm} l >{\raggedright\arraybackslash}X@{}}
 \toprule
-\textbf{Member} & \textbf{UID} & \textbf{Main role} \\
+\textbf{Name} & \textbf{UID} & \textbf{Lead} \\
 \midrule
-Vu Q.\ Nguyen (Daniel) & 3036755728 & Dynamic program, policy map, uncertain odds and experiments (with Yera) \\
-Yerassyl Taisarinov (Yera) & 3036459776 & Monte Carlo simulator, experiments and figures (with Daniel) \\
-Jihun Choi (Roy) & 3036734023 & Experiment design, comparative analysis, Pok\'emon case study \\
-Yusif Seyidov (Yusif) & 3036538850 & Ethics, report assembly \\
-Vivaan Kandhari (Vivaan) & 3036684400 & Literature, research gap, reward-rate baseline, Path of Exile snapshot \\
+Vu Q.\ Nguyen \textit{(Daniel)} & 3036755728 & Dynamic program, policy map, and the uncertain-odds module \\
+Yerassyl Taisarinov \textit{(Yera)} & 3036459776 & Monte Carlo simulator, figures, and the experiment pipeline \\
+Jihun Choi \textit{(Roy)} & 3036734023 & Experiment design, comparative analysis, and the Pok\'emon case study \\
+Yusif Seyidov \textit{(Yusif)} & 3036538850 & Team coordination, ethics, and report quality \\
+Vivaan Kandhari \textit{(Vivaan)} & 3036684400 & Literature, research gap, \(\rho\)-baseline, and the Path of Exile snapshot \\
 \bottomrule
 \end{tabularx}}
 
@@ -205,7 +206,7 @@ The project does not involve human subjects: there are no surveys, interviews, o
 
 \section{Timeline and team roles}
 \label{sec:timeline}
-The table is a starting point and may move, but each remaining milestone has a named lead.
+The week-by-week plan is a starting point and may move, but every remaining milestone has a named lead. The contribution table records each member's primary role, key deliverables, and where that work appears in this plan or will appear in the repository.
 
 \begin{table}[H]
 \centering
@@ -228,12 +229,47 @@ The table is a starting point and may move, but each remaining milestone has a n
 \end{tabularx}
 \end{table}
 
-\noindent
-\textbf{Daniel} specifies states \((i,t,k)\), implements the DP and policy map, and works with Yera on the uncertain-odds (Beta) module and the experiments.
-\textbf{Yera} owns the simulator, identical seeds, 95\% confidence intervals, and the experiment table, jointly with Daniel.
-\textbf{Roy} designs the experiments and comparative analysis, selects case-study events, records documented odds, and times public videos (three per event).
-\textbf{Yusif} writes the ethics section, assembles the report, and drafts the presentation script.
-\textbf{Vivaan} maintains the literature and gap paragraph, implements the \(\rho\)-rule baseline, and takes the Path of Exile snapshot.
+\begin{table}[H]
+\centering
+\caption{Team contributions by member.}
+\renewcommand{\arraystretch}{1.18}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}
+  >{\raggedright\arraybackslash}p{2.35cm}
+  >{\raggedright\arraybackslash}p{2.25cm}
+  >{\raggedright\arraybackslash}X
+  >{\raggedright\arraybackslash}X
+@{}}
+\toprule
+\textbf{Member} & \textbf{Primary role} & \textbf{Key deliverables} & \textbf{Plan / repository evidence} \\
+\midrule
+Vu Q.\ Nguyen \textit{(Daniel)}
+& Algorithm lead
+& DP states \((i,t,k)\); policy map; uncertain-odds (Beta) module; experiment support with Yera
+& Model and DP sections; forthcoming DP and policy-map code \\
+\addlinespace
+Yerassyl Taisarinov \textit{(Yera)}
+& Simulation lead
+& Monte Carlo engine; shared seeds; 95\% CIs; experiment figures and tables
+& Simulation and experiment sections; forthcoming simulator and plots \\
+\addlinespace
+Jihun Choi \textit{(Roy)}
+& Experiments and case study
+& Experiment design; comparative analysis; Pok\'emon event list, odds table, and video timings
+& Experiment table; case-study plan; forthcoming odds and timing notes \\
+\addlinespace
+Yusif Seyidov \textit{(Yusif)}
+& Coordination and report
+& Team forming and meetings; milestone tracking; teacher consults; plan-scope decisions; feasibility, ethics, and limitations; quality check and edits for Sections~1--4
+& Ethics and limitations; this contribution table; report assembly and presentation script \\
+\addlinespace
+Vivaan Kandhari \textit{(Vivaan)}
+& Literature and baseline
+& Literature review and research gap; \(\rho\)-rule baseline; Path of Exile snapshot
+& Literature / gap section; baseline section; forthcoming dated price extract \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 {\small
 \setlength{\itemsep}{0.28em}
