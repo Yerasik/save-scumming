@@ -1,0 +1,273 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.15cm]{geometry}
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{amsmath,amssymb}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\urlstyle{same}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{caption}
+\captionsetup{skip=5pt,font=small}
+
+\setstretch{1.07}
+\setlist[itemize]{leftmargin=1.15em,itemsep=0.12em,topsep=0.2em}
+\setlist[enumerate]{leftmargin=1.15em,itemsep=0.15em,topsep=0.25em}
+\titlespacing*{\section}{0pt}{0.85em}{0.35em}
+\titlespacing*{\subsection}{0pt}{0.65em}{0.25em}
+\titleformat{\section}{\normalsize\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
+\pagestyle{plain}
+
+\newcommand{\teamtable}{%
+\renewcommand{\arraystretch}{1.12}%
+\begin{tabularx}{\textwidth}{@{}l l X@{}}
+\toprule
+\textbf{Member} & \textbf{UID} & \textbf{Main role} \\
+\midrule
+Vu Q.\ Nguyen (Daniel) & 3036755728 & Dynamic program, policy map, uncertain odds and experiments (with Yera) \\
+Yerassyl Taisarinov (Yera) & 3036459776 & Monte Carlo simulator, experiments and figures (with Daniel) \\
+Jihun Choi (Roy) & 3036734023 & Experiment design, comparative analysis, Pok\'emon case study \\
+Yusif Seyidov (Yusif) & 3036538850 & Ethics, report assembly \\
+Vivaan Kandhari (Vivaan) & 3036684400 & Literature, research gap, reward-rate baseline, Path of Exile snapshot \\
+\bottomrule
+\end{tabularx}}
+
+\begin{document}
+\begin{center}
+{\large\bfseries Save Your Save: Allocating Save-Scumming Attempts Under Limited Playtime}\\[0.35em]
+{\normalsize COMP1110 Computing and Data Science in Everyday Life \textperiodcentered\ 2026/27 Semester 1}\\[0.15em]
+{\normalsize Group Project Plan \textperiodcentered\ Hybrid project (algorithmic + simulation/modelling)}
+\end{center}
+\vspace{0.5em}
+\teamtable
+
+\section{Problem statement}
+
+\textbf{Research question.}
+In a sequence of random game events that share one finite real-time budget, and whose odds may be known or uncertain, when is retrying after a bad outcome worth the time it takes away from later, possibly more valuable, events?
+
+\subsection{Context}
+Save-scumming is the practice of saving before a random in-game event (a dialogue check, a loot drop, a crafting roll, or a legendary encounter) and reloading until a desirable outcome occurs. The same choice appears whenever a player can repeat an attempt for a better result, whether by reloading a save or by farming a boss for a rare drop. We therefore use ``reload'' and ``retry'' interchangeably.
+
+The decision is not a single expected-value calculation. For an isolated event, one probability and one reward are enough. With several events in sequence, each retry consumes time that could otherwise be spent on later events. Repeatedly chasing a 5\% rare roll can be reasonable when little of value remains, and a poor use of the same minutes when a high-value event is still ahead. The same unsuccessful roll can therefore call for different actions at different points in a session.
+
+Players rarely announce a budget, but deadlines impose one: an exam the next morning, an expiring subscription, a time-limited event, or the end of an online season. Events not reached before the deadline are missed. That \emph{limited-playtime} setting is our main problem. As a baseline we also study \emph{unlimited playtime}, where no event can be missed but time still has an outside value, so the player maximises reward per second (Section~\ref{sec:baseline}). Comparing the two shows how much a deadline changes the best accept-or-retry rule.
+
+\subsection{Scope}
+In scope: independent, repeatable events with binary outcomes (success or failure); probabilities that are either documented or uncertain and updated from a Beta prior; a dynamic-programming (DP) accept-or-retry policy; Monte Carlo comparison with simpler player rules; a primary case study of documented Pok\'emon reset events in \emph{Pok\'emon Scarlet} and \emph{Violet}; and a smaller uncertain-odds test using published Path of Exile drop estimates.
+
+Out of scope: branching story paths, RNG manipulation or reused seeds, live market bots, surveying players, and building an application. Code is a prototype used to compute policies and simulation results, not a product.
+
+\section{Computing and data science connection}
+
+\textbf{Project type: hybrid.}
+The \emph{algorithmic} core is a finite-horizon dynamic program that returns an accept-or-retry action for each event, remaining time, and failure count. The \emph{simulation} core is a Monte Carlo engine that compares that policy with simpler rules on identical random seeds. We are not building an app. Python with NumPy fills the DP table and runs the simulator; Matplotlib produces policy maps and confidence-interval plots.
+
+\subsection{Model}
+A play segment is a sequence of \(n\) events. Event \(i\) has success probability \(p_i\) per attempt, rewards \(g_i > b_i\) for the good and bad outcomes, retry time \(c_i\) seconds, travel time \(f_i\) to the next event, and an entry cost \(e_i\) (zero when save-scumming; fragment cost when farming). After a failure the player keeps \(h_i\): \(h_i = 0\) when a reload discards the bad result, and \(h_i = b_i - e_i\) when a failed farm still yields loot but the next run must be paid for.
+
+Attempts are independent. The first attempt at each event costs no extra retry time but may carry \(e_i\). After a failure the player either accepts \(b_i\) or retries. We assume one target outcome per event, a fixed event order, and that either outcome leads to the same later events. Rewards are treated as fixed within a session (player-stated values for Pok\'emon; a dated market snapshot for Path of Exile).
+
+If the odds are documented we use \(q_i(k) = p_i\). If they are uncertain, the player holds a \(\mathrm{Beta}(\alpha_i,\beta_i)\) prior and, after \(k\) failures, uses the posterior mean
+\[
+q_i(k) = \frac{\alpha_i}{\alpha_i + \beta_i + k}.
+\]
+A prior \(\mathrm{Beta}(1,49)\) encodes a 2\% belief; after 50 failed runs the estimate falls to \(1\%\).
+
+\subsection{Main setting: fixed budget, solved by dynamic programming}
+\label{sec:dp}
+After every decision the remainder of the problem is described by the current event \(i\), time left \(t\), and failures so far \(k\). Let \(V(i,t,k)\) be the best expected remaining reward, \(W(i,t,k)\) the same just after a failure, and \(N(i,t)\) the value of moving on:
+\begin{align}
+N(i,t)
+&=
+\begin{cases}
+V(i+1,\, t-f_i,\, 0) - e_{i+1}
+& \text{if } t \ge f_i \text{ and } i < n,\\
+0 & \text{otherwise,}
+\end{cases}
+\label{eq:N}\\[0.35em]
+W(i,t,k)
+&=
+\max\bigl\{
+b_i + N(i,t),\;
+h_i + V(i,\, t-c_i,\, k+1)
+\bigr\}
+\quad (t > c_i \text{ for retry}),
+\label{eq:W}\\[0.35em]
+V(i,t,k)
+&=
+q_i(k)\,(g_i + N(i,t))
++ \bigl(1-q_i(k)\bigr)\, W(i,t,k).
+\label{eq:V}
+\end{align}
+Moving on yields the next event's value minus its entry cost, or nothing if time runs out. A success is taken with probability \(q_i(k)\). After a failure the player accepts \(b_i\) or retries, keeping \(h_i\) and returning to the same event with \(c_i\) less time and one more failure counted. The value of the session is \(V(1,T,0) - e_1\).
+
+We fill the table backwards over events and upwards over \(t\) in whole seconds. With attempt cap \(K\) there are \(n \times T \times K\) states and \(O(nTK)\) time. For known odds (\(K=1\)), ten events and a two-hour budget solve in under a second in Python. The output is a \emph{policy map}: for each event and each remaining time, whether to retry or accept. We compute the full map because the best action can switch more than once as time runs down.
+
+\textbf{Toy instance.}
+Two events, \(T = 180\) seconds. Event 1: \(p=0.1\), \(g=10\), \(b=0\), \(c=20\). Event 2: \(p=0.5\), \(g=8\), \(c=10\). If event 2 is still ahead, the DP refuses a third retry on event 1; an ``always reload'' rule can spend the budget and miss event 2. That is the pattern Experiment~D is designed to show on a larger scale.
+
+\subsection{Baseline: reward per second}
+\label{sec:baseline}
+With no deadline, time has an outside value \(\rho\) (reward per second available elsewhere). One more attempt at event \(i\) costs \(c_i\) seconds and gains \(p_i(g_i-b_i)+h_i\) in expectation, so it is worth taking exactly when
+\begin{equation}
+p_i(g_i - b_i) + h_i \;\ge\; \rho\, c_i.
+\label{eq:rho}
+\end{equation}
+Every attempt at a given event has the same odds and cost, so the rule is all-or-nothing per event. We search for \(\rho\) so that the implied schedule is consistent with the value of time it assumes. With known odds and no deadline, a retry cap should not beat the better of ``never retry'' and ``retry until success''; we check this numerically. With uncertain odds the claim need not hold, which hypothesis H5 tests.
+
+\subsection{Hypotheses and comparisons}
+The DP policy is optimal under the model's assumptions by construction. The empirical question is whether its advantage over simpler rules is large enough to matter. We test:
+\begin{itemize}
+\item \textbf{H1.} The DP's advantage over the best tuned baseline is largest at moderate time pressure and near zero for very short or very long budgets.
+\item \textbf{H3.} For an earlier event there is a smallest later reward at which the DP stops retrying it; we measure how this threshold moves with \(T\) and \(c_i\).
+\item \textbf{H5.} With uncertain odds, capping retries can beat retrying until success, unlike the known-odds case.
+\end{itemize}
+We also record whether the policy map switches more than once as time runs out, and how large an error in \(p_i\) or \(c_i\) must be before a simple rule matches the DP.
+
+\begin{table}[H]
+\centering
+\caption{Player strategies compared in simulation.}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.8cm} X@{}}
+\toprule
+\textbf{Strategy} & \textbf{Rule after a bad roll at event \(i\)} \\
+\midrule
+Never reload & Always accept. \\
+Always reload & Reload whenever \(t \ge c_i\). \\
+Fixed-\(k\) & Up to \(k\) rolls per event (\(k = 2,3,5\)). \\
+Reward-greedy & Reload only the top \(m\) events by \(g_i-b_i\), until success, while \(t \ge c_i + S_i\) (\(S_i\): travel still needed to reach the last event). \\
+Efficiency-greedy & Reload while \(p_i(g_i-b_i)/c_i \ge \kappa\) and \(t \ge c_i + S_i\), with cutoff \(\kappa\) tuned to its best value. \\
+DP policy & The policy map from Section~\ref{sec:dp}. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Simulation and analysis}
+Each simulated session has 5 to 10 events and budget \(T\). A Python simulator plays at least 10{,}000 sessions per strategy on identical seeds, recording reward, reloads, and time spent reloading. We report means with 95\% confidence intervals. Geometric waiting times in the simulator will be checked against \(1/p\) so that the engine is not a black box.
+
+\begin{table}[H]
+\centering
+\caption{Planned experiments. Experiment~D is the headline result.}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}p{4.4cm} X@{}}
+\toprule
+\textbf{Expt.} & \textbf{What we vary} & \textbf{Question} \\
+\midrule
+A. Budget & \(T = 10,20,30,60,120\) min & When does the DP pull ahead of simple rules, and when does it not matter? (H1) \\
+C. Retry cost & \(c_i = 5,20,60,120\) s & Whether cost alone flips the accept-or-retry decision. \\
+D. Future opportunity & One event fixed; a high-value event added or removed later & Does a valuable later event make reloading the earlier one a bad decision? (H3) \\
+B. Probability & \(p_i\) from 0.01 to 0.9 & How unlikely must an event be before reloading it stops paying off? \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Experiment~D is the result we will lead with: a case where chasing an early reward is right on its own, but wrong because something better lies ahead.
+
+\section{Literature / background review}
+
+\subsection{Save-scumming research}
+Save-scumming has received little academic attention. Farmer and Kelly~\cite{farmer2024} call for further study of the behaviour. Farmer, Kelly and Jones-Rincon~\cite{farmer2025,farmer2026} examine why players reload, including avoiding frustration and exploring alternative outcomes. The 2026 preprint is recent, but the work remains psychological: it does not ask whether a reload is mathematically worthwhile when time is scarce and later events compete for the same minutes.
+
+\subsection{Related computational research}
+Restart research is close because both settings ask whether another attempt is worth its cost. Luby, Sinclair and Zuckerman~\cite{luby1993} study restart policies for randomised algorithms; Lorenz~\cite{lorenz2016} studies restarting under a deadline. Those models restart \emph{one} randomised procedure, not a sequence of distinct later events with travel times. Weitzman's costly-search model~\cite{weitzman1979} compares an uncertain reward with the cost of continuing, but the decision maker chooses among alternatives rather than walking a prescribed route. Finite-state dynamic programming~\cite{sargent2025} supplies the computational method we use for the limited-playtime problem.
+
+\subsection{Bayesian learning and limited resources}
+For drops whose odds are not published, Bayesian decision theory updates a belief after each success or failure~\cite{degroot2004}. Russo et al.~\cite{russo2018} describe the trade-off between exploration and exploitation: an attempt can yield both a reward and information. Bandits with Knapsacks~\cite{badanidiyuru2018} shows how learning changes when each attempt consumes a limited resource. That literature has a budget, but not a fixed event order with travel times between named encounters.
+
+\subsection{Research gap}
+Within the studies reviewed, we did not find work that allocates one real-time play budget across several sequential game events, with an accept-or-retry rule that can use a Beta belief when the odds are unknown. The project combines these established methods to compare an adaptive policy with simpler strategies such as fixed retry limits and reward-based rules.
+
+\section{Feasibility, limitations, and ethics}
+
+\subsection{Data, methods, and workload}
+Almost all numerical evidence will come from our own simulator, whose true parameters we control. A working prototype of the DP and simulator already runs, and simulated means match the DP's predictions on small instances. Remaining work is experiment design, the case study, and analysis.
+
+\textbf{Primary case study (known odds).}
+We model 4 to 6 resettable events in \emph{Pok\'emon Scarlet}/\emph{Violet} in a fixed order (for example a gift Pok\'emon, a static legendary, and a key battle). Encounter and shiny odds are taken from public documentation (Bulbapedia and published tables). Reset and travel times are averaged from at least three public gameplay videos per event. Any event for which documentation shows that a reset does not produce a fresh roll will be dropped. Nobody in the group needs to own the game.
+
+\textbf{Secondary test (uncertain odds).}
+To contrast save-scumming with farming, we run the same DP on a small Path of Exile-style sequence in the simulator, using community drop-rate estimates and a \emph{fixed} snapshot of market values (for example a dated poe.ninja extract). We will not scrape live markets, will not interact with game servers, and will not treat Path of Exile as a second full empirical study.
+
+The remaining tasks are finalising the DP for both odds types, timing videos, taking one price snapshot, and writing the analysis. These divide cleanly among five members (Section~\ref{sec:timeline}).
+
+\subsection{Limitations}
+We will not claim beyond the following. Rewards in the Pok\'emon study are stated preferences, not facts; we test sensitivity rather than claiming a unique ``true'' value. Path of Exile prices will be a snapshot, not a live economy. Rolls are assumed independent; we do not model reused random seeds. Events follow a fixed order; branching paths are out of scope. Two illustrations show that the model can be instantiated on real published numbers. They do not show that it fits every genre.
+
+\subsection{Ethics}
+The project does not involve human subjects: there are no surveys, interviews, or recordings of players. We use published odds, community datasets, and public videos, and we record timestamps rather than republishing footage. We will not modify game clients or automate play on live servers, so terms-of-service issues do not arise. We take no position on whether save-scumming is good play; we evaluate a resource-allocation rule.
+
+\section{Timeline and team roles}
+\label{sec:timeline}
+The table is a starting point and may move, but each remaining milestone has a named lead.
+
+\begin{table}[H]
+\centering
+\caption{Remaining work, 6 October to 26 November 2026.}
+\renewcommand{\arraystretch}{1.02}
+\small
+\begin{tabularx}{\textwidth}{@{}l l X l@{}}
+\toprule
+\textbf{Week} & \textbf{Dates} & \textbf{Milestone} & \textbf{Lead} \\
+\midrule
+1 & 6 to 12 Oct & Freeze event list and parameters; DP solves the 2-event toy instance & Daniel \\
+2 & 13 to 19 Oct & Simulator: 10k sessions for Never / Always / Fixed-\(k\) vs DP & Yera, Daniel, Roy \\
+3 & 20 to 24 Oct & Interim progress meeting (\(\sim\)5 min); first policy-map figure & Yusif \\
+4 & 27 Oct to 2 Nov & Video timings for 4 to 6 Pok\'emon events; odds table complete & Roy \\
+5 & 3 to 4 Nov & Individual progress log; Experiments A and D; comparative analysis & Yera, Daniel, Roy \\
+6 & 5 to 11 Nov & Uncertain-odds module and H5; ethics and limitations freeze & Daniel, Yera, Yusif \\
+7 & 12 to 15 Nov & Final report due 15 Nov; figures, references, proofread & Yusif, Vivaan \\
+8 & 17 to 26 Nov & 10-minute group presentation (slot TBA) & all \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent
+\textbf{Daniel} specifies states \((i,t,k)\), implements the DP and policy map, and works with Yera on the uncertain-odds (Beta) module and the experiments.
+\textbf{Yera} owns the simulator, identical seeds, 95\% confidence intervals, and the experiment table, jointly with Daniel.
+\textbf{Roy} designs the experiments and comparative analysis, selects case-study events, records documented odds, and times public videos (three per event).
+\textbf{Yusif} writes the ethics section, assembles the report, and drafts the presentation script.
+\textbf{Vivaan} maintains the literature and gap paragraph, implements the \(\rho\)-rule baseline, and takes the Path of Exile snapshot.
+
+{\small
+\setlength{\itemsep}{0.28em}
+\begin{thebibliography}{10}
+\bibitem{farmer2024}
+G.~Farmer and D.~Kelly, `` `Save-scumming' in role-playing games: A call for further psychological exploration,'' British Psychological Society, Mar.\ 2024. [Online]. Available: \url{https://www.bps.org.uk/news}
+
+\bibitem{farmer2025}
+G.~Farmer, D.~Kelly and A.~Jones-Rincon, ``Save-Scumming: A Novel Exploration of Video Game Play,'' in \emph{Abstract Proceedings of DiGRA 2025: Games at the Crossroads}, 2025, doi: 10.26503/dl.v2025i3.2509.
+
+\bibitem{farmer2026}
+G.~Farmer, D.~Kelly and A.~Jones-Rincon, `` `You're playing the game wrong': Exploring motivations and perceptions of save-scumming in video games,'' PsyArXiv preprint, Jun.\ 2026, doi: 10.31234/osf.io/ew7nj\_v2.
+
+\bibitem{luby1993}
+M.~Luby, A.~Sinclair and D.~Zuckerman, ``Optimal speedup of Las Vegas algorithms,'' \emph{Information Processing Letters}, vol.~47, no.~4, pp.~173-180, 1993, doi: 10.1016/0020-0190(93)90029-9.
+
+\bibitem{lorenz2016}
+J.-H.~Lorenz, ``Completion probabilities and parallel restart strategies under an imposed deadline,'' \emph{PLOS ONE}, vol.~11, no.~10, Art.~no.~e0164605, 2016, doi: 10.1371/journal.pone.0164605.
+
+\bibitem{weitzman1979}
+M.~L.~Weitzman, ``Optimal search for the best alternative,'' \emph{Econometrica}, vol.~47, no.~3, pp.~641-654, 1979, doi: 10.2307/1910412.
+
+\bibitem{degroot2004}
+M.~H.~DeGroot, \emph{Optimal Statistical Decisions}. Hoboken, NJ: John Wiley \& Sons, 2004, doi: 10.1002/0471729000.
+
+\bibitem{russo2018}
+D.~J.~Russo, B.~Van Roy, A.~Kazerouni, I.~Osband and Z.~Wen, ``A tutorial on Thompson sampling,'' \emph{Foundations and Trends in Machine Learning}, vol.~11, no.~1, pp.~1-96, 2018, doi: 10.1561/2200000070.
+
+\bibitem{badanidiyuru2018}
+A.~Badanidiyuru, R.~Kleinberg and A.~Slivkins, ``Bandits with knapsacks,'' \emph{Journal of the ACM}, vol.~65, no.~3, Art.~no.~13, pp.~1-55, 2018, doi: 10.1145/3164539.
+
+\bibitem{sargent2025}
+T.~J.~Sargent and J.~Stachurski, \emph{Dynamic Programming: Finite States}. Cambridge: Cambridge University Press, 2025, doi: 10.1017/9781009540780.
+\end{thebibliography}
+}
+
+\end{document}
