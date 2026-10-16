@@ -1,0 +1,9 @@
+session_id,event_id,failures,probability,marginal_reward,retry_seconds,reward_per_second,rho,action
+uncertain_beta_a1_b49_T030min,E1,50,0.65,3.9000000000000004,5.0,0.78,0.006,retry
+uncertain_beta_a1_b49_T030min,E2,50,0.25,3.0,20.0,0.15,0.006,retry
+uncertain_beta_a1_b49_T030min,E3,50,0.01,0.25,60.0,0.004166666666666667,0.006,accept
+uncertain_beta_a1_b49_T030min,E4,50,0.4,4.0,20.0,0.2,0.006,retry
+uncertain_beta_a1_b49_T030min,E5,50,0.05,3.0,120.0,0.025,0.006,retry
+uncertain_beta_a1_b49_T030min,E6,50,0.75,3.75,5.0,0.75,0.006,retry
+uncertain_beta_a1_b49_T030min,E7,50,0.2,6.0,60.0,0.1,0.006,retry
+uncertain_beta_a1_b49_T030min,E8,50,0.5,8.0,20.0,0.4,0.006,retry

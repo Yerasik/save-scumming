@@ -1,0 +1,8 @@
+{
+  "file": "dummy_sessions.csv",
+  "is_dummy": true,
+  "purpose": "Plotting/mean/CI development ONLY; NOT simulator results.",
+  "row_count": 40,
+  "time_unit": "seconds",
+  "warning": "Do not use these fabricated rows as project findings."
+}

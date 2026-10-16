@@ -1,0 +1,3 @@
+session_id,event_id,failures,probability,marginal_reward,retry_seconds,reward_per_second,rho,action
+toy_2_event_T180,E1,0,0.1,1.0,20.0,0.05,0.1,accept
+toy_2_event_T180,E2,0,0.5,4.0,10.0,0.4,0.1,retry

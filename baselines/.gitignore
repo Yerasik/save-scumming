@@ -1,0 +1,3 @@
+# Keep local Python caches out of commits and pull requests.
+__pycache__/
+*.py[cod]

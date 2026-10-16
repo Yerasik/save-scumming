@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "session_id": "toy_2_event_T180",
+  "description": "Two-event plan example used to validate DP and simulator behaviour.",
+  "experiment": "toy",
+  "varied_factor": "none",
+  "varied_value": null,
+  "budget_seconds": 180,
+  "events": [
+    {
+      "event_id": "E1",
+      "odds_type": "known",
+      "p": 0.1,
+      "good_reward": 10,
+      "bad_reward": 0,
+      "retry_seconds": 20,
+      "travel_seconds": 0,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    },
+    {
+      "event_id": "E2",
+      "odds_type": "known",
+      "p": 0.5,
+      "good_reward": 8,
+      "bad_reward": 0,
+      "retry_seconds": 10,
+      "travel_seconds": 0,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    }
+  ]
+}

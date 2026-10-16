@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "generator": "data/synthetic/generate_synthetic.py",
+  "session_count": 24,
+  "sessions": [
+    {
+      "session_id": "toy_2_event_T180",
+      "experiment": "toy",
+      "path": "toy/toy_2_event_T180.json",
+      "event_count": 2,
+      "budget_seconds": 180
+    },
+    {
+      "session_id": "A_budget_T010min",
+      "experiment": "A",
+      "path": "experiment_A_budget/A_budget_T010min.json",
+      "event_count": 8,
+      "budget_seconds": 600
+    },
+    {
+      "session_id": "A_budget_T020min",
+      "experiment": "A",
+      "path": "experiment_A_budget/A_budget_T020min.json",
+      "event_count": 8,
+      "budget_seconds": 1200
+    },
+    {
+      "session_id": "A_budget_T030min",
+      "experiment": "A",
+      "path": "experiment_A_budget/A_budget_T030min.json",
+      "event_count": 8,
+      "budget_seconds": 1800
+    },
+    {
+      "session_id": "A_budget_T060min",
+      "experiment": "A",
+      "path": "experiment_A_budget/A_budget_T060min.json",
+      "event_count": 8,
+      "budget_seconds": 3600
+    },
+    {
+      "session_id": "A_budget_T120min",
+      "experiment": "A",
+      "path": "experiment_A_budget/A_budget_T120min.json",
+      "event_count": 8,
+      "budget_seconds": 7200
+    },
+    {
+      "session_id": "C_retry_cost_c005s",
+      "experiment": "C",
+      "path": "experiment_C_retry_cost/C_retry_cost_c005s.json",
+      "event_count": 8,
+      "budget_seconds": 1800
+    },
+    {
+      "session_id": "C_retry_cost_c020s",
+      "experiment": "C",
+      "path": "experiment_C_retry_cost/C_retry_cost_c020s.json",
+      "event_count": 8,
+      "budget_seconds": 1800
+    },
+    {
+      "session_id": "C_retry_cost_c060s",
+      "experiment": "C",
+      "path": "experiment_C_retry_cost/C_retry_cost_c060s.json",
+      "event_count": 8,
+      "budget_seconds": 1800
+    },
+    {
+      "session_id": "C_retry_cost_c120s",
+      "experiment": "C",
+      "path": "experiment_C_retry_cost/C_retry_cost_c120s.json",
+      "event_count": 8,
+      "budget_seconds": 1800
+    },
+    {
+      "session_id": "D_future_removed",
+      "experiment": "D",
+      "path": "experiment_D_future_opportunity/D_future_removed.json",
+      "event_count": 5,
+      "budget_seconds": 600
+    },
+    {
+      "session_id": "D_future_reward_08",
+      "experiment": "D",
+      "path": "experiment_D_future_opportunity/D_future_reward_08.json",
+      "event_count": 6,
+      "budget_seconds": 600
+    },
+    {
+      "session_id": "D_future_reward_20",
+      "experiment": "D",
+      "path": "experiment_D_future_opportunity/D_future_reward_20.json",
+      "event_count": 6,
+      "budget_seconds": 600
+    },
+    {
+      "session_id": "D_future_reward_40",
+      "experiment": "D",
+      "path": "experiment_D_future_opportunity/D_future_reward_40.json",
+      "event_count": 6,
+      "budget_seconds": 600
+    },
+    {
+      "session_id": "D_future_reward_80",
+      "experiment": "D",
+      "path": "experiment_D_future_opportunity/D_future_reward_80.json",
+      "event_count": 6,
+      "budget_seconds": 600
+    },
+    {
+      "session_id": "B_probability_p0p01",
+      "experiment": "B",
+      "path": "experiment_B_probability/B_probability_p0p01.json",
+      "event_count": 8,
+      "budget_seconds": 1800
+    },
+    {
+      "session_id": "B_probability_p0p02",
+      "experiment": "B",
+      "path": "experiment_B_probability/B_probability_p0p02.json",
+      "event_count": 8,
+      "budget_seconds": 1800
+    },
+    {
+      "session_id": "B_probability_p0p05",
+      "experiment": "B",
+      "path": "experiment_B_probability/B_probability_p0p05.json",
+      "event_count": 8,
+      "budget_seconds": 1800
+    },
+    {
+      "session_id": "B_probability_p0p10",
+      "experiment": "B",
+      "path": "experiment_B_probability/B_probability_p0p10.json",
+      "event_count": 8,
+      "budget_seconds": 1800
+    },
+    {
+      "session_id": "B_probability_p0p20",
+      "experiment": "B",
+      "path": "experiment_B_probability/B_probability_p0p20.json",
+      "event_count": 8,
+      "budget_seconds": 1800
+    },
+    {
+      "session_id": "B_probability_p0p40",
+      "experiment": "B",
+      "path": "experiment_B_probability/B_probability_p0p40.json",
+      "event_count": 8,
+      "budget_seconds": 1800
+    },
+    {
+      "session_id": "B_probability_p0p60",
+      "experiment": "B",
+      "path": "experiment_B_probability/B_probability_p0p60.json",
+      "event_count": 8,
+      "budget_seconds": 1800
+    },
+    {
+      "session_id": "B_probability_p0p90",
+      "experiment": "B",
+      "path": "experiment_B_probability/B_probability_p0p90.json",
+      "event_count": 8,
+      "budget_seconds": 1800
+    },
+    {
+      "session_id": "uncertain_beta_a1_b49_T030min",
+      "experiment": "uncertain_odds",
+      "path": "uncertain_odds/uncertain_beta_a1_b49_T030min.json",
+      "event_count": 8,
+      "budget_seconds": 1800
+    }
+  ]
+}
