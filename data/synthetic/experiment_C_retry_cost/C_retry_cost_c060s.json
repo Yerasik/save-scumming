@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "session_id": "C_retry_cost_c060s",
+  "description": "Experiment C: only E3's retry time changes.",
+  "experiment": "C",
+  "varied_factor": "E3.retry_seconds",
+  "varied_value": 60,
+  "budget_seconds": 1800,
+  "events": [
+    {
+      "event_id": "E1",
+      "odds_type": "known",
+      "p": 0.65,
+      "good_reward": 6,
+      "bad_reward": 0,
+      "retry_seconds": 5,
+      "travel_seconds": 30,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    },
+    {
+      "event_id": "E2",
+      "odds_type": "known",
+      "p": 0.25,
+      "good_reward": 12,
+      "bad_reward": 0,
+      "retry_seconds": 20,
+      "travel_seconds": 45,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    },
+    {
+      "event_id": "E3",
+      "odds_type": "known",
+      "p": 0.1,
+      "good_reward": 25,
+      "bad_reward": 0,
+      "retry_seconds": 60,
+      "travel_seconds": 60,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    },
+    {
+      "event_id": "E4",
+      "odds_type": "known",
+      "p": 0.4,
+      "good_reward": 10,
+      "bad_reward": 0,
+      "retry_seconds": 20,
+      "travel_seconds": 35,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    },
+    {
+      "event_id": "E5",
+      "odds_type": "known",
+      "p": 0.05,
+      "good_reward": 60,
+      "bad_reward": 0,
+      "retry_seconds": 120,
+      "travel_seconds": 90,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    },
+    {
+      "event_id": "E6",
+      "odds_type": "known",
+      "p": 0.75,
+      "good_reward": 5,
+      "bad_reward": 0,
+      "retry_seconds": 5,
+      "travel_seconds": 25,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    },
+    {
+      "event_id": "E7",
+      "odds_type": "known",
+      "p": 0.2,
+      "good_reward": 30,
+      "bad_reward": 0,
+      "retry_seconds": 60,
+      "travel_seconds": 50,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    },
+    {
+      "event_id": "E8",
+      "odds_type": "known",
+      "p": 0.5,
+      "good_reward": 16,
+      "bad_reward": 0,
+      "retry_seconds": 20,
+      "travel_seconds": 0,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    }
+  ]
+}

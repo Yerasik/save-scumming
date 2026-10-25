@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "session_id": "D_future_removed",
+  "description": "Experiment D: the early target is fixed while a later opportunity is removed or revalued.",
+  "experiment": "D",
+  "varied_factor": "later_good_reward",
+  "varied_value": null,
+  "budget_seconds": 600,
+  "events": [
+    {
+      "event_id": "early_target",
+      "odds_type": "known",
+      "p": 0.1,
+      "good_reward": 10,
+      "bad_reward": 0,
+      "retry_seconds": 20,
+      "travel_seconds": 35,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    },
+    {
+      "event_id": "bridge_1",
+      "odds_type": "known",
+      "p": 0.6,
+      "good_reward": 5,
+      "bad_reward": 0,
+      "retry_seconds": 10,
+      "travel_seconds": 40,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    },
+    {
+      "event_id": "bridge_2",
+      "odds_type": "known",
+      "p": 0.35,
+      "good_reward": 9,
+      "bad_reward": 0,
+      "retry_seconds": 20,
+      "travel_seconds": 45,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    },
+    {
+      "event_id": "bridge_3",
+      "odds_type": "known",
+      "p": 0.7,
+      "good_reward": 4,
+      "bad_reward": 0,
+      "retry_seconds": 5,
+      "travel_seconds": 30,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    },
+    {
+      "event_id": "final_event",
+      "odds_type": "known",
+      "p": 0.4,
+      "good_reward": 12,
+      "bad_reward": 0,
+      "retry_seconds": 20,
+      "travel_seconds": 0,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    }
+  ]
+}
