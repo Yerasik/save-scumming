@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "session_id": "A_budget_T060min",
+  "default_action": "accept",
+  "rules": [
+    {
+      "event_id": "E1",
+      "min_time_left": 5,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "E1",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "E2",
+      "min_time_left": 355,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "E2",
+      "min_time_left": 345,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "E2",
+      "min_time_left": 335,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "E2",
+      "min_time_left": 330,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "E2",
+      "min_time_left": 20,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "E2",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "E3",
+      "min_time_left": 600,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "E3",
+      "min_time_left": 185,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "E3",
+      "min_time_left": 180,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "E3",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "E4",
+      "min_time_left": 240,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "E4",
+      "min_time_left": 200,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "E4",
+      "min_time_left": 20,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "E4",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "E5",
+      "min_time_left": 645,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "E5",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "E6",
+      "min_time_left": 80,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "E6",
+      "min_time_left": 75,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "E6",
+      "min_time_left": 30,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "E6",
+      "min_time_left": 25,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "E6",
+      "min_time_left": 5,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "E6",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "E7",
+      "min_time_left": 130,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "E7",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "E8",
+      "min_time_left": 20,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "E8",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    }
+  ],
+  "solver": "dp.solve",
+  "budget_seconds": 3600,
+  "expected_value": 138.090005
+}

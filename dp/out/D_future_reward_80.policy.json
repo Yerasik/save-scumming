@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "session_id": "D_future_reward_80",
+  "default_action": "accept",
+  "rules": [
+    {
+      "event_id": "early_target",
+      "min_time_left": 325,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 75,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 65,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 35,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 20,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "bridge_1",
+      "min_time_left": 175,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "bridge_1",
+      "min_time_left": 170,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "bridge_1",
+      "min_time_left": 165,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "bridge_1",
+      "min_time_left": 115,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "bridge_1",
+      "min_time_left": 10,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "bridge_1",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "bridge_2",
+      "min_time_left": 155,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "bridge_2",
+      "min_time_left": 75,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "bridge_2",
+      "min_time_left": 20,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "bridge_2",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "bridge_3",
+      "min_time_left": 65,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "bridge_3",
+      "min_time_left": 60,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "bridge_3",
+      "min_time_left": 55,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "bridge_3",
+      "min_time_left": 50,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "bridge_3",
+      "min_time_left": 45,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "bridge_3",
+      "min_time_left": 40,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "bridge_3",
+      "min_time_left": 35,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "bridge_3",
+      "min_time_left": 30,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "bridge_3",
+      "min_time_left": 5,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "bridge_3",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "later_opportunity",
+      "min_time_left": 10,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "later_opportunity",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "final_event",
+      "min_time_left": 20,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "final_event",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    }
+  ],
+  "solver": "dp.solve",
+  "budget_seconds": 600,
+  "expected_value": 117.161724
+}
