@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "session_id": "toy_2_event_T180",
+  "default_action": "accept",
+  "rules": [
+    {"event_id": "E1", "min_time_left": 0, "max_failures": 1, "action": "retry"}
+  ]
+}
