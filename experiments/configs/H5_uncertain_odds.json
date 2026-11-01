@@ -1,0 +1,16 @@
+{
+  "experiment": "H5",
+  "question": "When odds are unknown, can a retry cap beat retry-until-success?",
+  "hypothesis": "H5: a retry cap can beat retry-until-success under uncertain odds, but not under known odds.",
+  "varied_factor": "prior on rare_drop (known p = 0.02, Beta(20, 980), Beta(1, 49), Beta(0.2, 9.8)); prior mean is 0.02 in all four",
+  "sessions": [
+    "experiments/sessions/H5/H5_known_p0p02.json",
+    "experiments/sessions/H5/H5_beta_a20_b980.json",
+    "experiments/sessions/H5/H5_beta_a1_b49.json",
+    "experiments/sessions/H5/H5_beta_a0p2_b9p8.json"
+  ],
+  "strategies": ["always", "fixed_k_2", "fixed_k_3", "fixed_k_5", "dp"],
+  "seeds": 10000,
+  "read_out": "DP check (1 Nov): from a full 1800 s budget DP retries rare_drop 75 times with known odds, 72 / 54 / 33 times as the Beta prior weakens. The weaker the prior, the earlier DP gives up. The simulator needs Beta support (Yera, week 6) to compare caps against retry-until-success; the runner solves DP and skips the simulation until then.",
+  "replaces": "data/synthetic/uncertain_odds/uncertain_beta_a1_b49_T030min.json (60 s retry, DP never retried; see dp/README.md finding 3)"
+}

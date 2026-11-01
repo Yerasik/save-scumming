@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "session_id": "D2_later_reward_160",
+  "description": "Experiment D v2: early event fixed; a rare, slow later event is removed or revalued (H3).",
+  "experiment": "D",
+  "varied_factor": "later_good_reward",
+  "varied_value": 160,
+  "budget_seconds": 600,
+  "events": [
+    {
+      "event_id": "early_target",
+      "p": 0.1,
+      "odds_type": "known",
+      "good_reward": 10,
+      "bad_reward": 0,
+      "retry_seconds": 20,
+      "travel_seconds": 30,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    },
+    {
+      "event_id": "later_opportunity",
+      "odds_type": "known",
+      "p": 0.05,
+      "good_reward": 160,
+      "bad_reward": 0,
+      "retry_seconds": 30,
+      "travel_seconds": 0,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    }
+  ]
+}

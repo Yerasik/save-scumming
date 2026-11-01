@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "session_id": "H5_beta_a1_b49",
+  "description": "H5: rare drop with prior mean 0.02, known or Beta of falling strength; a later known event competes for time.",
+  "experiment": "H5",
+  "varied_factor": "rare_drop_prior",
+  "varied_value": "Beta(1, 49)",
+  "budget_seconds": 1800,
+  "events": [
+    {
+      "event_id": "rare_drop",
+      "odds_type": "beta",
+      "alpha": 1,
+      "beta": 49,
+      "good_reward": 100,
+      "bad_reward": 0,
+      "retry_seconds": 20,
+      "travel_seconds": 30,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    },
+    {
+      "event_id": "later_opportunity",
+      "odds_type": "known",
+      "p": 0.05,
+      "good_reward": 100,
+      "bad_reward": 0,
+      "retry_seconds": 30,
+      "travel_seconds": 0,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    }
+  ]
+}

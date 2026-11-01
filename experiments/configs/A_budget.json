@@ -1,0 +1,16 @@
+{
+  "experiment": "A",
+  "question": "When does DP actually beat simple rules?",
+  "hypothesis": "H1: DP's edge is largest at moderate time pressure and near zero when the budget is tiny or huge.",
+  "varied_factor": "budget_seconds",
+  "sessions": [
+    "data/synthetic/experiment_A_budget/A_budget_T010min.json",
+    "data/synthetic/experiment_A_budget/A_budget_T020min.json",
+    "data/synthetic/experiment_A_budget/A_budget_T030min.json",
+    "data/synthetic/experiment_A_budget/A_budget_T060min.json",
+    "data/synthetic/experiment_A_budget/A_budget_T120min.json"
+  ],
+  "strategies": ["never", "always", "fixed_k_2", "fixed_k_3", "fixed_k_5", "reward_greedy", "efficiency_greedy", "dp"],
+  "seeds": 10000,
+  "read_out": "Plot DP minus the best simple rule against budget, with 95% CIs. H1 holds if the gap peaks in the middle (20-30 min) and shrinks at 10 and 120 min."
+}

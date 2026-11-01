@@ -1,0 +1,10 @@
+{
+  "experiment": "toy",
+  "question": "Do DP and the simulator agree on the 2-event toy (T = 180 s)?",
+  "hypothesis": null,
+  "varied_factor": "none",
+  "sessions": ["data/synthetic/toy/toy_2_event_T180.json"],
+  "strategies": ["never", "always", "fixed_k_2", "fixed_k_3", "fixed_k_5", "reward_greedy", "efficiency_greedy", "dp"],
+  "seeds": 10000,
+  "read_out": "DP mean should sit near its expected_value (13.68). Always-reload should not beat DP."
+}

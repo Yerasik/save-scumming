@@ -1,0 +1,19 @@
+{
+  "experiment": "B",
+  "question": "How unlikely must one event be before reloading it stops paying?",
+  "hypothesis": null,
+  "varied_factor": "p (one event only)",
+  "sessions": [
+    "data/synthetic/experiment_B_probability/B_probability_p0p01.json",
+    "data/synthetic/experiment_B_probability/B_probability_p0p02.json",
+    "data/synthetic/experiment_B_probability/B_probability_p0p05.json",
+    "data/synthetic/experiment_B_probability/B_probability_p0p10.json",
+    "data/synthetic/experiment_B_probability/B_probability_p0p20.json",
+    "data/synthetic/experiment_B_probability/B_probability_p0p40.json",
+    "data/synthetic/experiment_B_probability/B_probability_p0p60.json",
+    "data/synthetic/experiment_B_probability/B_probability_p0p90.json"
+  ],
+  "strategies": ["never", "always", "fixed_k_2", "fixed_k_3", "fixed_k_5", "reward_greedy", "efficiency_greedy", "dp"],
+  "seeds": 10000,
+  "read_out": "Find the smallest p at which DP still retries the varied event from a full budget (policy map), and where always-reload starts losing to DP."
+}

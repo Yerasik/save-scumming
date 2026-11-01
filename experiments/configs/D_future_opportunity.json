@@ -1,0 +1,18 @@
+{
+  "experiment": "D",
+  "question": "Does a valuable later event stop DP from reloading an earlier one?",
+  "hypothesis": "H3 (headline): there is a later reward large enough that DP stops retrying an earlier event.",
+  "varied_factor": "later_good_reward (removed, 10, 20, 40, 80, 160)",
+  "sessions": [
+    "experiments/sessions/D/D2_later_removed.json",
+    "experiments/sessions/D/D2_later_reward_010.json",
+    "experiments/sessions/D/D2_later_reward_020.json",
+    "experiments/sessions/D/D2_later_reward_040.json",
+    "experiments/sessions/D/D2_later_reward_080.json",
+    "experiments/sessions/D/D2_later_reward_160.json"
+  ],
+  "strategies": ["never", "always", "fixed_k_2", "fixed_k_3", "fixed_k_5", "reward_greedy", "efficiency_greedy", "dp"],
+  "seeds": 10000,
+  "read_out": "DP check (1 Nov): from a full 600 s budget DP retries early_target 30 times when the later event is removed or worth 10-20, 18 times at 40, and not at all at 80 or 160. Always-reload should lose most to DP at 80 and 160.",
+  "replaces": "data/synthetic/experiment_D_future_opportunity (later event p = 0.5, c = 10 s was always won quickly, so its value never competed for time; see dp/README.md finding 2)"
+}

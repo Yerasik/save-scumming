@@ -1,0 +1,15 @@
+{
+  "experiment": "C",
+  "question": "Does retry cost alone flip accept vs retry?",
+  "hypothesis": null,
+  "varied_factor": "retry_seconds on E3 only",
+  "sessions": [
+    "data/synthetic/experiment_C_retry_cost/C_retry_cost_c005s.json",
+    "data/synthetic/experiment_C_retry_cost/C_retry_cost_c020s.json",
+    "data/synthetic/experiment_C_retry_cost/C_retry_cost_c060s.json",
+    "data/synthetic/experiment_C_retry_cost/C_retry_cost_c120s.json"
+  ],
+  "strategies": ["never", "always", "fixed_k_2", "fixed_k_3", "fixed_k_5", "reward_greedy", "efficiency_greedy", "dp"],
+  "seeds": 10000,
+  "read_out": "Only E3's retry time changes. Report E3's retry cutoff from the policy map and whether DP stops retrying E3 at 60 or 120 s."
+}
