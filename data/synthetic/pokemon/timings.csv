@@ -1,0 +1,13 @@
+event_id,video_url,channel,video_date,retry_start,retry_end,travel_start,travel_end,notes
+wo_chien,https://www.youtube.com/watch?v=WxlYVDS5pfA,Hooligan,3 years ago,9:36,11:14,,,retry only
+wo_chien,https://www.youtube.com/watch?v=q3LJGon1Fp4&t=430s,MunchingOrange,3 years ago,11:02,12:32,13:24,19:34,retry + travel Wo-Chien -> Chien-Pao (video goes in route order)
+wo_chien,https://www.youtube.com/watch?v=Opk_JlROo8g&t=1098s,YTSunny,3 years ago,18:16,19:46,20:27,24:58,retry + travel Wo-Chien -> Chien-Pao
+chien_pao,https://www.youtube.com/watch?v=Opk_JlROo8g&t=1499s,YTSunny,3 years ago,25:22,26:47,0:00,4:20,retry + travel to Ting-Lu (approximation: video opens already travelling to Ting-Lu; start point not shown as Chien-Pao)
+chien_pao,https://www.youtube.com/watch?v=q3LJGon1Fp4&t=430s,MunchingOrange,3 years ago,20:53,22:30,25:11,31:38,retry + travel Chien-Pao -> Ting-Lu
+chien_pao,https://www.youtube.com/watch?v=QvtZD_aSk54,iStarlyTV,3 years ago,15:43,18:06,,,retry only
+ting_lu,https://www.youtube.com/watch?v=DwDlN8c1C8E,AbdahllaSmash,3 years ago,15:31,17:41,,,retry only
+ting_lu,https://www.youtube.com/watch?v=Opk_JlROo8g&t=1098s,YTSunny,3 years ago,4:45,6:22,6:55,11:44,retry + travel Ting-Lu -> Chi-Yu
+ting_lu,https://www.youtube.com/watch?v=q3LJGon1Fp4&t=430s,MunchingOrange,3 years ago,34:04,35:47,36:18,42:40,retry + travel Ting-Lu -> Chi-Yu
+chi_yu,https://www.youtube.com/watch?v=QP-HRF2DUYs,Hooligan,2 years ago,15:41,19:19,,,retry only; last event so no travel
+chi_yu,https://www.youtube.com/watch?v=Opk_JlROo8g&t=1098s,YTSunny,3 years ago,12:20,14:19,,,retry only; last event so no travel
+chi_yu,https://www.youtube.com/watch?v=q3LJGon1Fp4&t=430s,MunchingOrange,3 years ago,43:29,44:54,,,retry only; last event so no travel

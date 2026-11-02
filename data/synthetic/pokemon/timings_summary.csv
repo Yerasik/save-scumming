@@ -1,0 +1,5 @@
+event_id,retry_videos,mean_retry_seconds,travel_videos,mean_travel_seconds
+wo_chien,3,93,2,320
+chien_pao,3,108,2,324
+ting_lu,3,110,2,336
+chi_yu,3,141,0,
