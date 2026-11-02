@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "session_id": "pokemon_sv_main",
+  "description": "Pokemon Scarlet/Violet postgame route: the four Treasures of Ruin, target natures. Retry times are means over >= 3 public videos per event, travel over >= 2 (data/pokemon/timings.csv).",
+  "experiment": "pokemon",
+  "varied_factor": "none",
+  "varied_value": null,
+  "budget_seconds": 3600,
+  "events": [
+    {
+      "event_id": "wo_chien",
+      "odds_type": "known",
+      "p": 0.08,
+      "good_reward": 20.0,
+      "bad_reward": 0.0,
+      "retry_seconds": 93,
+      "travel_seconds": 320,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    },
+    {
+      "event_id": "chien_pao",
+      "odds_type": "known",
+      "p": 0.08,
+      "good_reward": 30.0,
+      "bad_reward": 0.0,
+      "retry_seconds": 108,
+      "travel_seconds": 324,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    },
+    {
+      "event_id": "ting_lu",
+      "odds_type": "known",
+      "p": 0.08,
+      "good_reward": 20.0,
+      "bad_reward": 0.0,
+      "retry_seconds": 110,
+      "travel_seconds": 336,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    },
+    {
+      "event_id": "chi_yu",
+      "odds_type": "known",
+      "p": 0.08,
+      "good_reward": 30.0,
+      "bad_reward": 0.0,
+      "retry_seconds": 141,
+      "travel_seconds": 0,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    }
+  ]
+}
