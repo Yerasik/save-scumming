@@ -1,5 +1,0 @@
-order,event_id,pokemon,location,target,p,p_source,good_reward,bad_reward,status
-1,wo_chien,Wo-Chien,South Province (Area One) shrine,Bold or Calm,0.08,"2 of 25 natures, each equally likely",20,0,final
-2,chien_pao,Chien-Pao,West Province (Area One) shrine,Jolly or Adamant,0.08,"2 of 25 natures, each equally likely",30,0,final
-3,ting_lu,Ting-Lu,Socarrat Trail shrine,Careful or Impish,0.08,"2 of 25 natures, each equally likely",20,0,final
-4,chi_yu,Chi-Yu,North Province (Area Two) shrine,Timid or Modest,0.08,"2 of 25 natures, each equally likely",30,0,final
