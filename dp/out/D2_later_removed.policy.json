@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "session_id": "D2_later_removed",
+  "default_action": "accept",
+  "rules": [
+    {
+      "event_id": "early_target",
+      "min_time_left": 20,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    }
+  ],
+  "solver": "dp.solve",
+  "budget_seconds": 600,
+  "expected_value": 9.61848
+}

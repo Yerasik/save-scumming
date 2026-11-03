@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "session_id": "D2_later_reward_040",
+  "default_action": "accept",
+  "rules": [
+    {
+      "event_id": "early_target",
+      "min_time_left": 250,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 240,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 220,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 210,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 190,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 180,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 160,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 150,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 130,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 120,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 100,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 90,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 80,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 60,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 50,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 30,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 20,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "early_target",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "later_opportunity",
+      "min_time_left": 30,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "later_opportunity",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    }
+  ],
+  "solver": "dp.solve",
+  "budget_seconds": 600,
+  "expected_value": 29.340429
+}
