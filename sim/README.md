@@ -16,6 +16,7 @@ Play a session event by event. Spend time. Follow a named strategy. Roll the dic
 - At least 10,000 sessions per strategy
 - **Same seeds** across strategies
 - Check: for a simple geometric wait, mean tries should sit near `1/p`
+- Beta events: draw one latent `p` per seed from `Beta(alpha, beta)` and keep it on retries. Do not store a made-up `p` in the JSON.
 
 ## Writes
 

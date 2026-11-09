@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "session_id": "H5_known_p0p02",
+  "default_action": "accept",
+  "rules": [
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 340,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 330,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 310,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 300,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 280,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 270,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 250,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 240,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 220,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 210,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 190,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 180,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 170,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 150,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 140,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 120,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 110,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 90,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 80,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 60,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 50,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 30,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 20,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "rare_drop",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "later_opportunity",
+      "min_time_left": 30,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "later_opportunity",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    }
+  ],
+  "solver": "dp.solve",
+  "budget_seconds": 1800,
+  "expected_value": 152.955869
+}

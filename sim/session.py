@@ -17,7 +17,6 @@ from sim.policy import lookup_action
 _SESSION_KEYS = ("budget_seconds", "events")
 _EVENT_KEYS = (
     "event_id",
-    "p",
     "good_reward",
     "bad_reward",
     "retry_seconds",
@@ -25,6 +24,8 @@ _EVENT_KEYS = (
     "entry_cost",
     "retained_failure_reward",
 )
+_KNOWN_ODDS_KEYS = ("p",)
+_BETA_ODDS_KEYS = ("alpha", "beta")
 
 # None means no attempt cap. Limits count the free first attempt.
 _ATTEMPT_LIMITS: dict[str, int | None] = {
@@ -53,25 +54,46 @@ def load_session(path: str | Path) -> dict[str, Any]:
         if not isinstance(event, dict):
             raise TypeError(f"events[{index}] must be an object")
         odds_type = event.get("odds_type", "known")
-        if odds_type == "beta":
-            raise ValueError("Beta is week 6")
-        if odds_type != "known":
+        if odds_type not in ("known", "beta"):
             raise ValueError(
                 f"events[{index}] has odds_type {odds_type!r}; "
-                "play_session supports known odds"
+                "play_session supports known or beta odds"
             )
-        missing_event = [key for key in _EVENT_KEYS if key not in event]
+        extra = _BETA_ODDS_KEYS if odds_type == "beta" else _KNOWN_ODDS_KEYS
+        missing_event = [key for key in _EVENT_KEYS + extra if key not in event]
         if missing_event:
             event_id = event.get("event_id", index)
             raise KeyError(f"event {event_id} is missing {missing_event}")
+        if odds_type == "beta" and "p" in event:
+            event_id = event.get("event_id", index)
+            raise ValueError(f"event {event_id} is beta and must omit p")
+        if odds_type == "beta":
+            if float(event["alpha"]) <= 0 or float(event["beta"]) <= 0:
+                event_id = event.get("event_id", index)
+                raise ValueError(f"event {event_id} alpha and beta must be positive")
     return session
 
 
-def _success(event: dict[str, Any], failures: int, rng: random.Random) -> bool:
-    """Draw one attempt. Known odds stay at ``p`` as failures increase."""
-    if failures < 0:
-        raise ValueError("failures must be non-negative")
-    return rng.random() < event["p"]
+def latent_success_probability(event: dict[str, Any], seed: int) -> float:
+    """True success chance for this event on this seed.
+
+    Known odds return ``p``. Beta odds draw once from Beta(alpha, beta) using a
+    stream keyed by ``(seed, event_id)``, so strategies that share a seed share
+    the same hidden ``p``, and retries do not redraw it.
+    """
+    if event.get("odds_type", "known") == "beta":
+        alpha = float(event["alpha"])
+        beta = float(event["beta"])
+        rng = random.Random(f"{seed}:{event['event_id']}:beta")
+        return rng.betavariate(alpha, beta)
+    return float(event["p"])
+
+
+def _success(success_p: float, rng: random.Random) -> bool:
+    """Draw one attempt against a fixed success probability."""
+    if success_p < 0 or success_p > 1:
+        raise ValueError("success probability must be in [0, 1]")
+    return rng.random() < success_p
 
 
 def remaining_travel(events: list[dict[str, Any]], index: int) -> float:
@@ -94,11 +116,21 @@ def top_m_event_ids(events: list[dict[str, Any]], m: int) -> set[str]:
 
 
 def efficiency_rate(event: dict[str, Any]) -> float:
-    """Known-odds reward per retry second: p * (g - b) / c."""
+    """Reward per retry second: q * (g - b) / c.
+
+    Known odds use ``p``. Beta odds use the prior mean
+    ``alpha / (alpha + beta)``, not a drawn latent ``p``.
+    """
     retry_seconds = event["retry_seconds"]
     if retry_seconds <= 0:
         raise ValueError("retry_seconds must be positive")
-    return event["p"] * (event["good_reward"] - event["bad_reward"]) / retry_seconds
+    if event.get("odds_type", "known") == "beta":
+        alpha = float(event["alpha"])
+        beta = float(event["beta"])
+        q = alpha / (alpha + beta)
+    else:
+        q = event["p"]
+    return q * (event["good_reward"] - event["bad_reward"]) / retry_seconds
 
 
 def _can_retry(attempts: int, limit: int | None, clock: float, retry_seconds: float) -> bool:
@@ -168,6 +200,7 @@ def _play_event(
     travel_left: float,
     greedy_ids: set[str] | None,
     kappa: float,
+    success_p: float,
 ) -> tuple[float, int, float, float]:
     """Play one reached event. Return reward, reloads, reload time, and clock."""
     reward = -float(event["entry_cost"])
@@ -177,7 +210,7 @@ def _play_event(
     attempts = 0
     while True:
         attempts += 1
-        if _success(event, failures, rng):
+        if _success(success_p, rng):
             reward += event["good_reward"]
             break
         if _should_retry(
@@ -230,8 +263,12 @@ def play_session(
     ``good_reward - bad_reward`` until success, while
     ``time_left >= retry_seconds`` plus remaining travel to the last event.
     ``efficiency_greedy`` retries while
-    ``p * (good_reward - bad_reward) / retry_seconds >= kappa`` and the
-    same travel reserve holds. Both greedy rules are known-odds only.
+    ``q * (good_reward - bad_reward) / retry_seconds >= kappa`` and the
+    same travel reserve holds. For known odds ``q`` is ``p``; for Beta
+    odds it is the prior mean. A Beta event draws one latent success
+    chance per seed from ``Beta(alpha, beta)`` and keeps it on every
+    retry. The DP policy may still update its belief after failures;
+    the dice do not.
 
     ``entry_cost`` is paid on entry. ``travel_seconds`` is paid when moving
     on. If the clock cannot cover that travel, every later event is unreached.
@@ -240,9 +277,6 @@ def play_session(
     (one ``{event_id, reached}`` row per event, in file order).
     """
     events = session["events"]
-    for event in events:
-        if event.get("odds_type", "known") == "beta":
-            raise ValueError("Beta is week 6")
 
     if strategy == "dp":
         if policy is None:
@@ -278,6 +312,7 @@ def play_session(
             travel_left=remaining_travel(events, index),
             greedy_ids=greedy_ids,
             kappa=kappa,
+            success_p=latent_success_probability(event, seed),
         )
         reward += event_reward
         reloads += event_reloads

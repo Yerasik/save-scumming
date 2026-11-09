@@ -22,7 +22,7 @@ python -B experiments/make_sessions.py                      # rebuild D v2 and H
 python -B -m unittest discover -s experiments -p 'test_*.py' -v
 ```
 
-`run_experiment.py` writes `dp/out/<session_id>.policy.json` and `sim/out/<experiment>/<session_id>.csv` (all strategies, seeds `0 .. N-1`). `--seeds 2000` for a quick run. Sessions with Beta odds get a policy but no simulation until `sim/` supports Beta (week 6).
+`run_experiment.py` writes `dp/out/<session_id>.policy.json` and `sim/out/<experiment>/<session_id>.csv` (all strategies, seeds `0 .. N-1`). `--seeds 2000` for a quick run.
 
 ## Why D and H5 were rebuilt
 
@@ -41,7 +41,7 @@ DP retries of the early / rare event from a full budget (`test_experiments.py` l
 |---|---|---|---|---|
 | rare-drop retries | 75 | 72 | 54 | 33 |
 
-Note: under a Beta prior DP has no hard cap. The posterior mean falls like `1/k`, so DP stops earlier the weaker the prior, but with more time it keeps going. The cap vs until-success comparison needs the simulator to draw a true `p` from the prior.
+Note: under a Beta prior DP has no hard cap. The posterior mean falls like `1/k`, so DP stops earlier the weaker the prior, but with more time it keeps going. The simulator draws one latent `p` per seed from the prior and keeps it on retries.
 
 ## Preliminary results (1 Nov, 10,000 seeds, mean reward ± 95% CI)
 

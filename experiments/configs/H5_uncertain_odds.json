@@ -11,6 +11,6 @@
   ],
   "strategies": ["always", "fixed_k_2", "fixed_k_3", "fixed_k_5", "dp"],
   "seeds": 10000,
-  "read_out": "DP check (1 Nov): from a full 1800 s budget DP retries rare_drop 75 times with known odds, 72 / 54 / 33 times as the Beta prior weakens. The weaker the prior, the earlier DP gives up. The simulator needs Beta support (Yera, week 6) to compare caps against retry-until-success; the runner solves DP and skips the simulation until then.",
+  "read_out": "DP check (1 Nov): from a full 1800 s budget DP retries rare_drop 75 times with known odds, 72 / 54 / 33 times as the Beta prior weakens. The weaker the prior, the earlier DP gives up. Compare mean reward of fixed-k caps against always (retry-until-success) and DP; a cap should be able to beat always under a weak Beta prior, not under known p = 0.02.",
   "replaces": "data/synthetic/uncertain_odds/uncertain_beta_a1_b49_T030min.json (60 s retry, DP never retried; see dp/README.md finding 3)"
 }

@@ -5,8 +5,8 @@ For each session in the config this writes
     dp/out/<session_id>.policy.json
     sim/out/<experiment>/<session_id>.csv
 
-using the same seeds 0 .. N-1 for every strategy. Sessions with Beta odds get a
-policy but are not simulated until the simulator supports Beta (week 6).
+using the same seeds 0 .. N-1 for every strategy. Beta sessions draw one latent
+success chance per event per seed and keep it on retries.
 
 From the repository root:
 
@@ -40,10 +40,6 @@ def load_config(path: Path) -> dict[str, Any]:
     return config
 
 
-def has_beta(session: dict[str, Any]) -> bool:
-    return any(event.get("odds_type", "known") == "beta" for event in session["events"])
-
-
 def run(config: dict[str, Any], seeds: int, policy_dir: Path, sim_dir: Path) -> None:
     sim_out = sim_dir / str(config["experiment"])
     policy_dir.mkdir(parents=True, exist_ok=True)
@@ -60,9 +56,6 @@ def run(config: dict[str, Any], seeds: int, policy_dir: Path, sim_dir: Path) -> 
             handle.write("\n")
         print(f"{session_id}: DP E[reward] = {policy['expected_value']:.4f}")
 
-        if has_beta(session):
-            print("  skipped simulation: Beta odds not supported by sim/ yet")
-            continue
         csv_path = sim_out / f"{session_id}.csv"
         sim_run.main(
             [

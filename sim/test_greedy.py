@@ -8,9 +8,6 @@ Run from the repository root:
 from __future__ import annotations
 
 import copy
-import subprocess
-import sys
-import tempfile
 import unittest
 from pathlib import Path
 
@@ -67,24 +64,19 @@ class GreedyStrategyTests(unittest.TestCase):
         self.assertEqual(remaining_travel(reserved["events"], 0), 160)
         self.assertEqual([row["reached"] for row in one["reached"]], [True, True])
 
-    def test_beta_is_week_six(self) -> None:
-        with self.assertRaisesRegex(ValueError, r"^Beta is week 6$"):
-            load_session(BETA)
-        with tempfile.TemporaryDirectory() as temporary:
-            completed = subprocess.run(
-                [
-                    sys.executable, "-B", "-m", "sim.run",
-                    "--session", str(BETA),
-                    "--strategies", "reward_greedy",
-                    "--seeds", "1",
-                    "--out", str(Path(temporary) / "out.csv"),
-                ],
-                cwd=ROOT,
-                capture_output=True,
-                text=True,
-            )
-        self.assertNotEqual(completed.returncode, 0)
-        self.assertIn("Beta is week 6", completed.stderr)
+    def test_efficiency_rate_uses_beta_prior_mean(self) -> None:
+        session = load_session(BETA)
+        beta_event = next(
+            event for event in session["events"]
+            if event.get("odds_type") == "beta"
+        )
+        prior = beta_event["alpha"] / (beta_event["alpha"] + beta_event["beta"])
+        expected = (
+            prior
+            * (beta_event["good_reward"] - beta_event["bad_reward"])
+            / beta_event["retry_seconds"]
+        )
+        self.assertAlmostEqual(efficiency_rate(beta_event), expected)
 
 
 if __name__ == "__main__":

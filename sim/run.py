@@ -155,12 +155,7 @@ def main(argv: list[str] | None = None) -> None:
         raise SystemExit("--seeds must be non-negative")
     if args.reward_top_m < 1:
         raise SystemExit("--reward-top-m must be at least 1")
-    try:
-        payload = load_session(args.session)
-    except ValueError as exc:
-        if str(exc) == "Beta is week 6":
-            raise SystemExit("Beta is week 6") from None
-        raise
+    payload = load_session(args.session)
     strategies = parse_strategies(args.strategies)
     policy = load_policy(args.policy) if args.policy is not None else None
     if "dp" in strategies and policy is None:
