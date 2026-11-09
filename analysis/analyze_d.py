@@ -4,40 +4,36 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-def load_experiment_d_csvs(sim_dir="sim/out/D"):
-    """Loads all Experiment D CSV files and extracts future reward levels."""
+def load_and_process_d(sim_dir="sim/out/D"):
     pattern = os.path.join(sim_dir, "D2_later_*.csv")
     files = glob.glob(pattern)
-    
     if not files:
-        raise FileNotFoundError(f"No Experiment D CSV files found in {sim_dir}")
+        raise FileNotFoundError(f"No Experiment D files found in {sim_dir}")
     
     all_data = []
     for fpath in files:
         fname = os.path.basename(fpath)
-        # Parse reward level from filename (e.g., D2_later_reward_040.csv -> 0.40 or removed -> 0.0)
         if "removed" in fname:
-            reward_val = 0.0
-            label = "Removed (No Future Reward)"
+            reward_val = 0
         else:
             try:
-                reward_str = fname.split('_')[3].replace('.csv', '')
-                reward_val = float(reward_str) / 100.0  # e.g., 040 -> 0.40
-                label = f"Future Reward: {reward_val}"
+                num_str = [p for p in fname.split('_') if len(p)==3 and p.isdigit()][0]
+                reward_val = int(num_str)
             except Exception:
-                reward_val = 0.0
-                label = "Unknown"
+                if "010" in fname: reward_val = 10
+                elif "020" in fname: reward_val = 20
+                elif "040" in fname: reward_val = 40
+                elif "080" in fname: reward_val = 80
+                elif "160" in fname: reward_val = 160
+                else: reward_val = 0
                 
         df = pd.read_csv(fpath)
         df['future_reward'] = reward_val
-        df['condition'] = label
         all_data.append(df)
         
-    return pd.concat(all_data, ignore_index=True)
-
-def calculate_d_stats(df):
-    """Computes statistics grouped by future reward level."""
-    grouped = df.groupby(['future_reward', 'condition'])['reward'].agg(
+    combined = pd.concat(all_data, ignore_index=True)
+    
+    grouped = combined.groupby(['future_reward', 'strategy'])['reward'].agg(
         mean_reward='mean',
         std_reward='std',
         sample_count='count'
@@ -46,48 +42,56 @@ def calculate_d_stats(df):
     grouped['std_reward'] = grouped['std_reward'].fillna(0)
     grouped['standard_error'] = grouped['std_reward'] / np.sqrt(grouped['sample_count'].replace(0, 1))
     grouped['ci_95_margin'] = 1.96 * grouped['standard_error']
-    
-    return grouped.sort_values('future_reward')
+    return grouped.sort_values(['future_reward', 'strategy'])
 
-def plot_experiment_d(stats_df, output_path="analysis/experiment_d_chart.png"):
-    """Generates the Experiment D performance chart testing Hypothesis 3."""
+def plot_d(stats_df, output_path="analysis/experiment_d_chart.png"):
     plt.figure(figsize=(10, 6))
     
-    rewards = stats_df['future_reward'].values
-    means = stats_df['mean_reward'].values
-    errors = stats_df['ci_95_margin'].values
-
-    plt.errorbar(rewards, means, yerr=errors, fmt='-s', color='darkorange', ecolor='black', 
-                 capsize=5, linewidth=2, markersize=8, label='DP Strategy (H3 Test)')
+    # Strictly the three strategies required by Yera & H3 spec
+    target_strategies = ['dp', 'always', 'reward_greedy']
+    styles = {
+        'dp': {'fmt': '-o', 'color': 'darkorange', 'lw': 2.5, 'ms': 9, 'label': 'DP Strategy'},
+        'always': {'fmt': '-s', 'color': 'crimson', 'lw': 2, 'ms': 7, 'label': 'Always-Reload'},
+        'reward_greedy': {'fmt': '--^', 'color': 'purple', 'lw': 2, 'ms': 8, 'label': 'Reward-Greedy'}
+    }
     
-    plt.xlabel('Future Opportunity Reward Magnitude', fontsize=11, fontweight='bold')
+    for strat in target_strategies:
+        sub = stats_df[stats_df['strategy'] == strat].copy()
+        if sub.empty:
+            continue
+        
+        x_numeric = sub['future_reward'].astype(int).values
+        y_numeric = sub['mean_reward'].values
+        y_err = sub['ci_95_margin'].values
+        
+        cfg = styles.get(strat, {'fmt': '-o', 'color': 'black', 'lw': 1.5, 'ms': 6, 'label': strat})
+        
+        plt.errorbar(x_numeric, y_numeric, yerr=y_err, 
+                     fmt=cfg['fmt'], color=cfg['color'], capsize=5, linewidth=cfg['lw'], 
+                     markersize=cfg['ms'], label=cfg['label'])
+        
+    plt.xlabel('Future Opportunity Reward Magnitude ($R_{future}$)', fontsize=11, fontweight='bold')
     plt.ylabel('Mean Total Reward', fontsize=11, fontweight='bold')
-    plt.title('Experiment D: Impact of Future Opportunities on Strategy Performance (H3)', fontsize=12, fontweight='bold')
+    plt.title('Experiment D: Impact of Future Opportunities (H3 Test - Proportional X-Axis)', fontsize=12, fontweight='bold')
+    
+    plt.xticks([0, 10, 20, 40, 80, 160], fontsize=10)
+    plt.xlim(-5, 170)
+    plt.ylim(-5, 115)
+    
     plt.grid(True, linestyle='--', alpha=0.6)
-    plt.legend(frameon=True)
-
-    plt.figtext(0.12, 0.02, "Note: Generated from simulator outputs in sim/out/D/ (Hypothesis 3 verification).", 
-                wrap=True, horizontalalignment='left', fontsize=9, style='italic', color='darkgreen')
-
-    plt.tight_layout(rect=[0, 0.05, 1, 1])
+    plt.legend(frameon=True, fontsize=10, loc='upper left')
+    
+    plt.tight_layout()
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    plt.savefig(output_path)
+    plt.savefig(output_path, dpi=300)
     plt.close()
-    print(f"Experiment D chart successfully saved to: {output_path}")
+    print(f"Saved publication-grade Experiment D chart to: {output_path}")
 
 def main():
-    print("-> Loading Experiment D simulation outputs...")
-    df = load_experiment_d_csvs("sim/out/D")
-    
-    stats = calculate_d_stats(df)
-    
-    print("\n=======================================================")
-    print("            EXPERIMENT D: H3 ANALYSIS SUMMARY          ")
-    print("=======================================================")
-    print(stats.to_string(index=False))
-    print("=======================================================\n")
-    
-    plot_experiment_d(stats)
+    df = load_and_process_d()
+    print("=== EXPERIMENT D (H3) COMPARATIVE SUMMARY ===")
+    print(df[df['strategy'].isin(['dp', 'always', 'reward_greedy'])].to_string(index=False))
+    plot_d(df)
 
 if __name__ == '__main__':
     main()
