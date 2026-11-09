@@ -13,6 +13,19 @@ Pokémon Scarlet / Violet case study (known odds). Same session JSON shape as `d
 
 Budget 60 min. `bad_reward = 0`. DP expected reward: 56.4.
 
+## Pokémon note: event, p, c, videos
+
+Summary for the report (issue #3). `p` for every event comes from the nature mechanic: 25 natures, each equally likely ([Bulbapedia: Nature](https://bulbapedia.bulbagarden.net/wiki/Nature)), so a target of 2 natures gives p = 2/25 = 0.08. A soft reset rerolls the nature ([Game8](https://game8.co/games/Pokemon-Scarlet-Violet/archives/393246)).
+
+| # | Event | Target | `p` | Retry `c` | Travel `f` (to next shrine) | Videos (retry) | Videos (travel) |
+|---|---|---|---|---|---|---|---|
+| 1 | Wo-Chien | Bold or Calm | 0.08 | 93 s | 320 s (to Chien-Pao) | [Hooligan](https://www.youtube.com/watch?v=WxlYVDS5pfA) 9:36-11:14 (98 s)<br>[MunchingOrange](https://www.youtube.com/watch?v=q3LJGon1Fp4&t=430s) 11:02-12:32 (90 s)<br>[YTSunny](https://www.youtube.com/watch?v=Opk_JlROo8g&t=1098s) 18:16-19:46 (90 s) | [MunchingOrange](https://www.youtube.com/watch?v=q3LJGon1Fp4&t=430s) 13:24-19:34 (370 s)<br>[YTSunny](https://www.youtube.com/watch?v=Opk_JlROo8g&t=1098s) 20:27-24:58 (271 s) |
+| 2 | Chien-Pao | Jolly or Adamant | 0.08 | 108 s | 324 s (to Ting-Lu) | [YTSunny](https://www.youtube.com/watch?v=Opk_JlROo8g&t=1499s) 25:22-26:47 (85 s)<br>[MunchingOrange](https://www.youtube.com/watch?v=q3LJGon1Fp4&t=430s) 20:53-22:30 (97 s)<br>[iStarlyTV](https://www.youtube.com/watch?v=QvtZD_aSk54) 15:43-18:06 (143 s) | [YTSunny](https://www.youtube.com/watch?v=Opk_JlROo8g&t=1499s) 0:00-4:20 (260 s, approx.: start point not shown)<br>[MunchingOrange](https://www.youtube.com/watch?v=q3LJGon1Fp4&t=430s) 25:11-31:38 (387 s) |
+| 3 | Ting-Lu | Careful or Impish | 0.08 | 110 s | 336 s (to Chi-Yu) | [AbdahllaSmash](https://www.youtube.com/watch?v=DwDlN8c1C8E) 15:31-17:41 (130 s)<br>[YTSunny](https://www.youtube.com/watch?v=Opk_JlROo8g&t=1098s) 4:45-6:22 (97 s)<br>[MunchingOrange](https://www.youtube.com/watch?v=q3LJGon1Fp4&t=430s) 34:04-35:47 (103 s) | [YTSunny](https://www.youtube.com/watch?v=Opk_JlROo8g&t=1098s) 6:55-11:44 (289 s)<br>[MunchingOrange](https://www.youtube.com/watch?v=q3LJGon1Fp4&t=430s) 36:18-42:40 (382 s) |
+| 4 | Chi-Yu | Timid or Modest | 0.08 | 141 s | 0 (last event) | [Hooligan](https://www.youtube.com/watch?v=QP-HRF2DUYs) 15:41-19:19 (218 s)<br>[YTSunny](https://www.youtube.com/watch?v=Opk_JlROo8g&t=1098s) 12:20-14:19 (119 s)<br>[MunchingOrange](https://www.youtube.com/watch?v=q3LJGon1Fp4&t=430s) 43:29-44:54 (85 s) | - |
+
+**How the times were averaged.** Each timing is `end - start`, read off the video player. Retry runs from the start of the shrine battle to the catch / nature screen; travel runs from leaving one shrine to arriving at the next shrine's door, and is recorded on the row of the shrine being left. Stake hunting is excluded because it is a one-time setup. For each event, `c` is the plain mean of its 3 retry timings and `f` the mean of its 2 travel timings, rounded to whole seconds (`build_session.py`). Raw timestamps and notes are in `timings.csv`.
+
 ## Route
 
 Postgame, fixed order. Before each shrine, the eight stakes are already pulled and the game is saved with autosave off. One reset cycle = close the game, reload, walk in, battle, catch, check the nature.
