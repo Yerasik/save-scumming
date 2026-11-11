@@ -1,0 +1,47 @@
+{
+  "snapshot_id": "poe1_mercenaries_3_26_exarch_2026-11-05",
+  "game": "Path of Exile 1",
+  "league": "Mercenaries of Trarthus",
+  "patch": "3.26.0",
+  "snapshot_date": "2026-11-05",
+  "snapshot_timezone": "Asia/Shanghai",
+  "scope": "secondary_illustration",
+  "encounter": "The Searing Exarch (regular, repeatable encounter)",
+  "price_currency": "Chaos Orb",
+  "price_observation_date": null,
+  "price_source_url": null,
+  "league_source_url": "https://webcdn.pathofexile.com/forum/view-thread/3789402/page/1",
+  "drop_source": {
+    "type": "community_estimates",
+    "url": "https://www.poewiki.net/index.php?title=The_Searing_Exarch&oldid=1636125#Drops",
+    "regular_sample_size": 317,
+    "public_contributor_report_url": "https://www.reddit.com/r/pathofexile/comments/1mdirq6/i_ran_625_eaters_121_exarchs_1314_blueprint_wings/",
+    "notes": "Rounded estimates from the regular encounter column for patch 3.26.0. The sample size is the table's reported regular total, not an item-level denominator verified from raw runs."
+  },
+  "items": [
+    {
+      "name": "Dawnbreaker",
+      "role": "unique_pool_drop",
+      "estimated_drop_probability": 0.63,
+      "price": null
+    },
+    {
+      "name": "Dawnstrider",
+      "role": "unique_pool_drop",
+      "estimated_drop_probability": 0.35,
+      "price": null
+    },
+    {
+      "name": "Dissolution of the Flesh",
+      "role": "illustrative_target",
+      "estimated_drop_probability": 0.02,
+      "price": null
+    },
+    {
+      "name": "Incandescent Invitation",
+      "role": "encounter_entry_item",
+      "estimated_drop_probability": null,
+      "price": null
+    }
+  ]
+}
