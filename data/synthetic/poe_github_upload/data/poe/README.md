@@ -30,7 +30,10 @@ failures. This is an illustrative modeling choice: the prior's strength of
 50 is not inferred from the wiki sample, and the synthetic H5 rewards and
 timings are not measurements from Path of Exile.
 
-This is a reference record, not a session JSON. All prices are intentionally
+The runnable contrast session is `data/poe/poe_exarch_beta.json` (Beta(1, 49)
+on Dissolution, then a later known event; timings match H5 v2). Run
+`experiments/configs/poe.json`. This snapshot itself is a reference record,
+not a session JSON. All prices are intentionally
 `null` (unobserved, not zero). If prices are added, use a single dated,
 manually checked source for the same league and record its observation date,
 URL, item variants and values in Chaos Orbs. The invitation belongs on the

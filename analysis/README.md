@@ -37,5 +37,26 @@ python analysis/analyze.py --csv sim/out/toy_sessions.csv --manifest data/synthe
 ---
 
 ## Generated Outputs
-* **Statistical Summary:** Prints a formatted summary table to the terminal containing strategy names, sample counts ($n = 10,000$), mean rewards, standard deviations, standard errors, and 95% confidence interval margins.
+* **Statistical Summary:** Prints a formatted summary table to the terminal containing strategy names, sample counts (n = 10,000), mean rewards, standard deviations, standard errors, and 95% confidence interval margins.
 * **Figure Asset:** Saves the rendered visualization to `analysis/experiment_a_chart.png`.
+
+---
+
+## Experiment figures (report)
+
+From the repository root, with pandas / numpy / matplotlib installed:
+
+```
+python -B analysis/analyze_h5.py        # analysis/experiment_h5_chart.png
+python -B analysis/analyze_pokemon.py   # analysis/experiment_pokemon_chart.png
+python -B analysis/analyze_poe.py       # analysis/experiment_poe_chart.png
+```
+
+**H5.** `analyze_h5.py` reads `dp/out/h5_recheck.csv`, not `sim/out/H5`. The simulator's `fixed_k_N` caps every event, which is not a fair H5 test at p = 0.02. The recheck caps only `rare_drop` and lets the later event retry until success. The chart shows DP, always-reload, and the best rare-drop-only cap (N annotated).
+
+**Pokémon / PoE.** Bar charts from `sim/out/pokemon/pokemon_sv_main.csv` and `sim/out/poe/poe_exarch_beta.csv` after:
+
+```
+python -B experiments/run_experiment.py experiments/configs/pokemon.json
+python -B experiments/run_experiment.py experiments/configs/poe.json
+```

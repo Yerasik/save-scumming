@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "session_id": "poe_exarch_beta",
+  "description": "Path of Exile contrast: farm a 2% unique (Dissolution of the Flesh, community estimate for regular Searing Exarch in 3.26.0) under a weak Beta prior, then a later known opportunity. Retry and travel times are illustrative (same scale as H5 v2), not timed from PoE footage. Rewards are points, not Chaos prices — the dated snapshot has null prices on purpose.",
+  "experiment": "poe",
+  "varied_factor": "none",
+  "varied_value": null,
+  "budget_seconds": 1800,
+  "events": [
+    {
+      "event_id": "dissolution_of_the_flesh",
+      "odds_type": "beta",
+      "alpha": 1,
+      "beta": 49,
+      "good_reward": 100,
+      "bad_reward": 0,
+      "retry_seconds": 20,
+      "travel_seconds": 30,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    },
+    {
+      "event_id": "later_opportunity",
+      "odds_type": "known",
+      "p": 0.05,
+      "good_reward": 100,
+      "bad_reward": 0,
+      "retry_seconds": 30,
+      "travel_seconds": 0,
+      "entry_cost": 0.0,
+      "retained_failure_reward": 0.0
+    }
+  ]
+}

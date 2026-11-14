@@ -44,7 +44,7 @@ JSON session (events + time budget)
 analysis/  means, 95% CIs, figures
 ```
 
-Start with **synthetic** sessions in `data/synthetic/`. Pokémon files in `data/pokemon/` replace those later. Do not wait for video timings to write DP, the simulator, or plots.
+Synthetic sessions in `data/synthetic/` (and `experiments/sessions/`) are the factor sweeps. Pokémon is the real-game case (`data/pokemon/pokemon_sv_main.json`). Path of Exile is the uncertain-odds contrast (`data/poe/poe_exarch_beta.json`, 2% mean from the dated snapshot).
 
 ## Folder map
 
@@ -54,7 +54,8 @@ Start with **synthetic** sessions in `data/synthetic/`. Pokémon files in `data/
 | `sim/` | Yera | Monte Carlo engine, shared seeds, `sessions.csv` |
 | `data/synthetic/` | Vivaan | Fake sessions + `manifest.json` so everyone can start |
 | `data/pokemon/` | Roy | Real event list, odds, video timings (same JSON shape) |
-| `experiments/` | Roy | Configs for experiments A, B, C, D |
+| `data/poe/` | Vivaan / Yera | Beta session for the 2% unique contrast (snapshot stays under `data/synthetic/`) |
+| `experiments/` | Roy | Configs for experiments A, B, C, D, H5, Pokémon, PoE |
 | `baselines/` | Vivaan | Reward-per-second (ρ) rule |
 | `analysis/` | Yusif | Plots, CIs, README commands that reproduce figures |
 | `tests/` | shared (Yusif glue) | Schema and pipeline checks so `main` stays runnable |
@@ -76,7 +77,9 @@ Each run changes **one** thing.
 - **B** — change probability on one event. How rare before reloading stops paying?
 - **C** — change retry cost on **one** event only.
 - **D** — headline. Same early event; a high-value later event is added, removed, or revalued.
-- **H5** — uncertain odds. Can a retry cap beat “retry until success”?
+- **H5** — uncertain odds. Can a retry cap beat “retry until success”? Chart from `dp/out/h5_recheck.csv` (cap the rare drop only).
+- **Pokémon** — real Scarlet/Violet route (`pokemon_sv_main.json`). DP = always-reload.
+- **PoE** — Beta(1, 49) session from the 2% Dissolution estimate. DP beats always-reload.
 
 ## Course deliverables
 

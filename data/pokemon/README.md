@@ -75,7 +75,11 @@ Then:
 python -B data/pokemon/build_session.py                 # needs 3 retry + 2 travel timings per event
 python -B -m unittest discover -s data/pokemon -p 'test_*.py' -v
 python -B -m dp.solve data/pokemon/pokemon_sv_main.json --out dp/out
+python -B experiments/run_experiment.py experiments/configs/pokemon.json
+python -B analysis/analyze_pokemon.py
 ```
+
+Outputs: `dp/out/pokemon_sv_main.policy.json`, `sim/out/pokemon/pokemon_sv_main.csv`, `analysis/experiment_pokemon_chart.png`.
 
 Means are rounded to whole seconds. The builder refuses to write `pokemon_sv_main.json` until every event has 3 retry timings and every event but the last has 2 travel timings (team decision, 2 Nov).
 
@@ -85,15 +89,15 @@ Means are rounded to whole seconds. The builder refuses to write `pokemon_sv_mai
 - One Chien-Pao -> Ting-Lu travel timing (YTSunny, 0:00-4:20) opens already travelling to Ting-Lu; its start point is not shown to be Chien-Pao. It is used as an approximation and flagged in `timings.csv`.
 - Rewards are stated preferences. See the sensitivity check below.
 
-## Results (2 Nov, 10,000 seeds)
+## Results (10,000 seeds; CSV in `sim/out/pokemon/`)
 
 | Strategy | Stated rewards (20/30/20/30) | All rewards 25 |
 |---|---|---|
-| DP | 56.4 ± 0.5 | 58.8 ± 0.5 |
-| Always reload | 56.4 ± 0.5 | 58.8 ± 0.5 |
-| Fixed-k = 5 | 33.8 ± 0.5 | 33.9 ± 0.5 |
-| Reward-greedy | 32.0 ± 0.3 | 28.8 ± 0.3 |
-| Never reload | 8.1 ± 0.3 | 8.2 ± 0.3 |
+| DP | 56.36 ± 0.53 | 58.8 ± 0.5 |
+| Always reload | 56.36 ± 0.53 | 58.8 ± 0.5 |
+| Fixed-k = 5 | 33.84 ± 0.47 | 33.9 ± 0.5 |
+| Reward-greedy | 32.00 ± 0.29 | 28.8 ± 0.3 |
+| Never reload | 8.14 ± 0.27 | 8.2 ± 0.3 |
 
 - **Sensitivity:** with all four rewards set to 25, the DP policy is unchanged (each event: retry while at least one retry still fits), so the result does not depend on the exact reward values.
 - **DP = always reload** on this route, at every budget tried (10, 15, 20, 30, 60 min; 5,000 seeds each, DP minus always within ±0.3). All four events have the same odds (0.08) and similar reward per second, and travel (~5.5 min) costs more than a reset (~1.5-2.5 min), so moving on early never pays. This is the H1 "near zero" case: real Pokémon resets are a route where the simple habit is already optimal. The synthetic experiments (A, D) show when it is not.

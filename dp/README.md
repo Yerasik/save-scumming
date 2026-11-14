@@ -76,6 +76,12 @@ What this means for the report:
 - **The "but not under known odds" half does not hold as built.** Even with known p, a 75-attempt cap beats `always` by +1.8 (7 SE). That comes from the later event competing for time (H3), not from uncertainty: `always` keeps reloading the rare drop until the clock forces it out. Suggested wording: *a cap helps a little under known odds because of the later event, and a lot under uncertain odds; the extra gain (+15.6 and +44.7 vs +1.8) is the uncertainty effect.*
 - **The best fixed cap is as good as the DP here** (within 0.5). For one uncertain event, "stop after N rolls" is enough if N is chosen well; the DP's value is that it finds N for you, and that N depends on how unsure you are.
 
+The report H5 figure is `analysis/experiment_h5_chart.png`, built from this CSV:
+
+```
+python -B analysis/analyze_h5.py
+```
+
 ## Report figure
 
 `dp/out/figures/report_policy_map.png` (`.pdf` for LaTeX). One panel per H5 session: x is failed rolls so far, y is seconds left, blue is "reload", grey is "accept and move on", and the black line is the path from a full budget. The DP gives up after 76 / 73 / 55 / 34 rolls as the prior weakens, with the same 2% mean in every panel. The thin stripes near the bottom are real: rare-drop retries cost 20 s and later-event retries 30 s, so whether one more reload eats a whole later retry flips every 20 s.

@@ -1,0 +1,12 @@
+{
+  "experiment": "poe",
+  "question": "When the rare unique's odds are only a weak community estimate, can a DP (or a cap) beat retry-until-success?",
+  "hypothesis": "H5 contrast: under Beta(1, 49) with mean 0.02 (Dissolution of the Flesh), a sensible stop rule beats always-reload; Pokémon with known p = 0.08 does not need that.",
+  "varied_factor": "none",
+  "sessions": [
+    "data/poe/poe_exarch_beta.json"
+  ],
+  "strategies": ["never", "always", "fixed_k_2", "fixed_k_3", "fixed_k_5", "reward_greedy", "efficiency_greedy", "dp"],
+  "seeds": 10000,
+  "read_out": "Mean reward of DP vs always-reload. This session uses the same 2% mean and timings as H5 Beta(1, 49); the PoE snapshot supplies the 2% figure and is not a live scrape."
+}

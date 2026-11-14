@@ -1,0 +1,12 @@
+{
+  "experiment": "pokemon",
+  "question": "On the Scarlet/Violet Treasures of Ruin route, does DP beat simple reload habits?",
+  "hypothesis": "H1 near-zero case: same odds and similar reward-per-second on every shrine, so always-reload already matches DP.",
+  "varied_factor": "none",
+  "sessions": [
+    "data/pokemon/pokemon_sv_main.json"
+  ],
+  "strategies": ["never", "always", "fixed_k_2", "fixed_k_3", "fixed_k_5", "reward_greedy", "efficiency_greedy", "dp"],
+  "seeds": 10000,
+  "read_out": "Compare mean reward of DP with always-reload and the greedy/fixed-k rules. If DP ≈ always, the real Pokémon route is the case where the simple habit is already optimal."
+}

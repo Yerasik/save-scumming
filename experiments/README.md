@@ -10,6 +10,8 @@ One config per experiment. Each changes **one** named factor (PLAN.md section 4)
 | `configs/C_retry_cost.json` | `retry_seconds` on E3 only, 5–120 s | `data/synthetic/experiment_C_retry_cost/` | Does cost alone flip accept vs retry? |
 | `configs/D_future_opportunity.json` | later event's `good_reward` | `experiments/sessions/D/` (**v2**) | Does a later prize stop the early reload? (H3) |
 | `configs/H5_uncertain_odds.json` | prior on the rare drop | `experiments/sessions/H5/` (**v2**) | Can a retry cap beat retry-until-success? (H5) |
+| `configs/pokemon.json` | none | `data/pokemon/pokemon_sv_main.json` | Does DP beat simple habits on the real SV route? |
+| `configs/poe.json` | none | `data/poe/poe_exarch_beta.json` | Same 2% mean as H5, as a PoE-named contrast |
 
 ## Commands
 
@@ -18,6 +20,8 @@ From the repository root (Python 3.10+, standard library only):
 ```
 python -B experiments/run_experiment.py experiments/configs/A_budget.json
 python -B experiments/run_experiment.py experiments/configs/D_future_opportunity.json
+python -B experiments/run_experiment.py experiments/configs/pokemon.json
+python -B experiments/run_experiment.py experiments/configs/poe.json
 python -B experiments/make_sessions.py                      # rebuild D v2 and H5 v2
 python -B -m unittest discover -s experiments -p 'test_*.py' -v
 ```
@@ -68,3 +72,28 @@ DP's edge peaks at moderate pressure and is near zero at both ends. That is what
 | Reward-greedy | 9.6 | 10.0 | 14.0 | 26.9 | 52.7 | 104.2 |
 
 Once the later prize is worth 80 or more, DP stops reloading the early event and always-reload loses 4.2 (80) and 16.8 (160). No single simple rule matches DP across the sweep: always-reload is right when the later prize is small, reward-greedy when it is large. DP switches between them by itself.
+
+**Pokémon SV main (known p = 0.08, 10,000 seeds).** Policy `dp/out/pokemon_sv_main.policy.json`, CSV `sim/out/pokemon/pokemon_sv_main.csv`. Mean reward ± 95% CI:
+
+| Strategy | Mean |
+|---|---|
+| DP | 56.36 ± 0.53 |
+| Always reload | 56.36 ± 0.53 |
+| Fixed-k = 5 | 33.84 ± 0.47 |
+| Reward-greedy | 32.00 ± 0.29 |
+| Never / efficiency-greedy | 8.14 ± 0.27 |
+
+DP equals always-reload. Same odds and similar reward-per-second on every shrine, so the simple habit is already optimal (H1 near-zero).
+
+**PoE Exarch Beta(1, 49) contrast (10,000 seeds).** Session `data/poe/poe_exarch_beta.json` (2% mean from the dated snapshot; timings match H5 v2, not PoE footage). Policy `dp/out/poe_exarch_beta.policy.json`, CSV `sim/out/poe/poe_exarch_beta.csv`.
+
+| Strategy | Mean |
+|---|---|
+| DP | 133.64 ± 1.37 |
+| Always reload | 118.03 ± 1.79 |
+| Efficiency-greedy | 119.11 ± 1.78 |
+| Reward-greedy | 69.97 ± 1.03 |
+| Fixed-k = 5 (every event) | 31.32 ± 1.00 |
+| Never | 6.91 ± 0.51 |
+
+DP beats always-reload by about 15.6. That is the H5 story on PoE names. `fixed_k_5` here caps **every** event, so it is not a fair H5 test; use `dp/out/h5_recheck.csv` for caps on the rare drop only.

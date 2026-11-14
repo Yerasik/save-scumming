@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "session_id": "pokemon_sv_main",
+  "default_action": "accept",
+  "rules": [
+    {
+      "event_id": "wo_chien",
+      "min_time_left": 1202,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "wo_chien",
+      "min_time_left": 1200,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "wo_chien",
+      "min_time_left": 93,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "wo_chien",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "chien_pao",
+      "min_time_left": 108,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "chien_pao",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "ting_lu",
+      "min_time_left": 110,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "ting_lu",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    },
+    {
+      "event_id": "chi_yu",
+      "min_time_left": 141,
+      "max_failures": 1000000,
+      "action": "retry"
+    },
+    {
+      "event_id": "chi_yu",
+      "min_time_left": 0,
+      "max_failures": 1000000,
+      "action": "accept"
+    }
+  ],
+  "solver": "dp.solve",
+  "budget_seconds": 3600,
+  "expected_value": 56.376877
+}
