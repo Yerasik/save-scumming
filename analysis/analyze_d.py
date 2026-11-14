@@ -70,11 +70,11 @@ def plot_d(stats_df, output_path="analysis/experiment_d_chart.png"):
                      fmt=cfg['fmt'], color=cfg['color'], capsize=5, linewidth=cfg['lw'], 
                      markersize=cfg['ms'], label=cfg['label'])
         
-    plt.xlabel('Future Opportunity Reward Magnitude ($R_{future}$)', fontsize=11, fontweight='bold')
+    plt.xlabel('Later event\'s good reward', fontsize=11, fontweight='bold')
     plt.ylabel('Mean Total Reward', fontsize=11, fontweight='bold')
-    plt.title('Experiment D: Impact of Future Opportunities (H3 Test - Proportional X-Axis)', fontsize=12, fontweight='bold')
+    plt.title('H3: Impact of a Later Prize', fontsize=12, fontweight='bold')
     
-    plt.xticks([0, 10, 20, 40, 80, 160], fontsize=10)
+    plt.xticks([0, 10, 20, 40, 80, 160], ['removed', '10', '20', '40', '80', '160'], fontsize=10)
     plt.xlim(-5, 170)
     plt.ylim(-5, 115)
     

@@ -54,7 +54,7 @@ Vivaan Kandhari \textit{(Vivian)} & 3036684400 & Synthetic data, literature, Pat
 
 %======================================================================
 \section{Abstract\who{Vivian}}
-At times, a game will give you a negative result, and you can replay. Trying again could possibly be worthwhile, but the minutes it consumes are minutes you can no longer spend on something better later. This paper explores the tradeoff between taking a payout in a game versus betting on the next outcome. Thus, when the game engine has a fixed series of events that all draw on one playtime budget, when should a player take what they got and when should they go again? We set it up as a dynamic programming problem, where the best action to follow depends on the current event, time remaining and the success chance. If it is not known, the model maintains a Beta belief that gets updated after every failure. We then compare the performance of the resulting policy against simpler rules, such as retrying until success or limiting retries to a constant number, via Monte Carlo simulation for 10,000 runs per strategy. In a synthetic budget experiment, at the 30-minute budget, the policy beats the best simple strategy (fixed-$k = 5$) by 18.7 reward units. In a second experiment, increasing the value of a later outcome was sufficient to reverse the policy, from retrying the early event to accepting its first outcome. We use \emph{Pok\'emon Scarlet} and \emph{Violet} as our principal worked example, and we use Path of Exile drop-rate estimates to show what uncertainty in odds looks like in practice. In general, one will only retry if the expected gain is greater than the value of saving that time for later opportunities.
+At times, a game will give you a negative result, and you can replay. Trying again could possibly be worthwhile, but the minutes it consumes are minutes you can no longer spend on something better later. This paper explores the tradeoff between taking a payout in a game versus betting on the next outcome. Thus, when the game engine has a fixed series of events that all draw on one playtime budget, when should a player take what they got and when should they go again? We set it up as a dynamic programming problem, where the best action to follow depends on the current event, time remaining and the success chance. If it is not known, the model maintains a Beta belief that gets updated after every failure. We then compare the performance of the resulting policy against simpler rules, such as retrying until success or limiting retries to a constant number, via Monte Carlo simulation for 10,000 runs per strategy. In a synthetic budget experiment, at the 30-minute budget, the policy beats the best simple strategy (fixed-$k = 5$) by 18.7 reward units. In a second experiment, increasing the value of a later outcome was sufficient to reverse the policy, from retrying the early event to accepting its first outcome. We use \emph{Pok\'emon Scarlet} and \emph{Violet} as our principal worked example; on that route the DP turns out to match retrying until success, because walking to the next shrine costs more than another reset. We use a Path of Exile drop-rate estimate to show what uncertain odds look like in practice; there the DP beats retrying until success by 15.6. In general, one will only retry if the expected gain is greater than the value of saving that time for later opportunities.
 
 \need{Vivian}{Tighten to the course word limit if needed. Keep the 18.7 gap, the later-prize reversal, Pok\'emon, and Path of Exile.}
 
@@ -89,8 +89,6 @@ A session is a fixed sequence of $n$ events played in order, with a total time b
 The first attempt at an event is free. If it fails, the player has two options: accept $b_i$ and move on, or spend $c_i$ seconds to try again. If time runs out before the player reaches an event, that event is lost. The goal is to choose, after every failure, whether to accept or retry so that the expected total reward over the session is as large as possible.
 
 We assume attempts are independent, there is one target outcome per event, the order of events is fixed, and success or failure at one event does not change what comes later. Rewards are fixed points within a session, not values that change during play. We do not model branching stories, RNG manipulation, or anything that needs access to a game's code.
-
-\need{Vivian}{Add one sentence that $e_i = 0$ and $h_i = 0$ in every reported session (no entry cost; a reload discards the bad result).}
 
 %======================================================================
 \section{Literature review and research gap\who{Vivian}}
@@ -164,9 +162,7 @@ As a simpler reference point, we also use the reward-per-second rule from our pr
 \[
 q_i(k)\,(g_i - b_i) \ge \rho\, c_i.
 \]
-This rule is what a player would use if missing later events were not a risk.
-
-\need{Vivian}{You own the $\rho$-baseline: state the value of $\rho$ used (or that efficiency-greedy used cutoff $0.10$). Also check that equations~\eqref{eq:N}--\eqref{eq:V} match what you meant; every session in this report has $h_i = 0$.}
+This rule is what a player would use if missing later events were not a risk. The efficiency-greedy strategy in Section~\ref{sec:method} is this rule with $\rho$ fixed at $0.10$ reward per second, plus a check that enough time is left to reach the last event.
 
 \subsection{Datasets\who{Yera}}
 The solver and the simulator take the same session files. Three kinds of session appear in this report.
@@ -179,9 +175,26 @@ The solver and the simulator take the same session files. Three kinds of session
 
 Every result below is 10,000 Monte Carlo sessions per strategy. Seeds are $0$ through $9{,}999$ and are reused across strategies. Mean reward is reported with a 95\% interval (mean $\pm 1.96$ SE). When two strategies are compared, the difference is paired on those shared seeds.
 
-\need{Roy}{Insert the shrine table: event, target natures, $p$, mean retry $c$, mean travel $f$, and how the video timestamps were averaged (3 retry videos and 2 travel videos per event). Dropped events (shiny-locked, nature-locked) in one short list.}
+\begin{table}[H]
+\centering
+\caption{Pok\'emon session. $p = 2/25$ because each of the 25 natures is equally likely and two are targets. $c$ is the mean of 3 retry timings and $f$ the mean of 2 travel timings, read off public videos (7 videos in total).}
+\label{tab:shrines}
+\small
+\begin{tabular}{@{}l l r r r r@{}}
+\toprule
+\textbf{Shrine} & \textbf{Target natures} & \textbf{$p$} & \textbf{Retry $c$} & \textbf{Travel $f$} & \textbf{$g$} \\
+\midrule
+Wo-Chien  & Bold or Calm      & 0.08 & 93\,s  & 320\,s & 20 \\
+Chien-Pao & Jolly or Adamant  & 0.08 & 108\,s & 324\,s & 30 \\
+Ting-Lu   & Careful or Impish & 0.08 & 110\,s & 336\,s & 20 \\
+Chi-Yu    & Timid or Modest   & 0.08 & 141\,s & 0 (last) & 30 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-\need{Vivian}{Path of Exile snapshot (you own this): date 2026-11-05, league Mercenaries 3.26, source of the 2\% figure, and that prices were left unobserved.}
+A retry runs from the start of the shrine battle to the nature screen; travel runs from leaving one shrine to the next shrine's door. Stake hunting is a one-time setup and is left out. Events were dropped where a reset is not a fresh roll: shiny hunts (static encounters are shiny-locked) and the DLC Pok\'emon with fixed natures. The starter was dropped because it is not part of the same play session.
+
+The snapshot was taken on 5 November 2026 for the Mercenaries of Trarthus league (patch 3.26.0). The 2\% figure for \emph{Dissolution of the Flesh} is the community estimate on the Path of Exile wiki's Searing Exarch drop table (regular encounter, 317 reported runs). Market prices were deliberately left unobserved, so rewards are points, not Chaos Orb values.
 
 \subsection{Methodology\who{Daniel}}
 \label{sec:method}
@@ -199,7 +212,7 @@ Never reload & Always accept. \\
 Always reload & Retry until success, while $\mathrm{time\_left} \ge c_i$. \\
 Fixed-$k$ & At most $k$ attempts per event ($k = 2,3,5$), counting the free first attempt. \\
 Reward-greedy & Retry only the highest-reward event, keeping enough time to reach the last event. \\
-Efficiency-greedy & Retry while $p(g-b)/c$ is above a cutoff ($0.10$ here), keeping enough time to reach the last event. For Beta events the rate uses the prior mean, not the hidden $p$. \\
+Efficiency-greedy & Retry while $p(g-b)/c$ is above a cutoff ($0.10$ here), keeping enough time to reach the last event. For Beta events the rate uses the prior mean, not the hidden $p$. The cutoff is fixed, not tuned per session; on the Pok\'emon route every shrine falls below it, so there this rule never retries. \\
 DP & Follow the policy map. The simulator does not re-solve the dynamic program. \\
 \bottomrule
 \end{tabularx}
@@ -216,7 +229,7 @@ Every strategy is played on the same 10,000 random seeds. That way, differences 
 
 We checked the engine three ways before trusting the results:
 \begin{enumerate}
-\item The simulated mean reward of the DP policy matched the solver's predicted value in every session, within 2.5 standard errors (within 1.2 for all four H5 sessions).
+\item The simulated mean reward of the DP policy matched the solver's predicted value in all 17 reported sessions, within 1.6 standard errors.
 \item The average number of tries until a success matched $1/p$, as it should for independent rolls.
 \item Automated tests cover the solver, the simulator and the input files, and all of them pass.
 \end{enumerate}
@@ -267,8 +280,6 @@ The best simple rule also changes with $T$: efficiency-greedy when time is tight
 \caption{H1: mean reward against time budget. Error bars are 95\% CIs.}
 \label{fig:H1}
 \end{figure}
-
-\need{Yusif}{You own the figures: replace Fig.~\ref{fig:H1} if the analysis script changes axis labels. Keep the paired-difference story in Table~\ref{tab:H1}.}
 
 \subsection{H3: a later prize\who{Yera}}
 \label{sec:H3}
@@ -344,7 +355,7 @@ $\mathrm{Beta}(0.2,9.8)$& 69.4  & 114.1 (30) & $+44.7$ & 114.1 \\
 \end{tabular}
 \end{table}
 
-A cap helps a little when the odds are known, because the later event still needs time: always-reload keeps hitting the 2\% drop until the clock forces it out (H3 again). A cap helps a lot when the odds are uncertain, and the extra gain grows as the prior gets weaker ($+2.5$, then $+15.6$, then $+44.7$, against $+1.8$ when $p$ is known). The best cap also shortens ($75 \to 60 \to 30$), which is where the DP gives up on the policy map.
+A cap helps a little when the odds are known, because the later event still needs time: always-reload keeps hitting the 2\% drop until the clock forces it out (H3 again). A cap helps a lot when the odds are uncertain, and the extra gain grows as the prior gets weaker ($+2.5$, then $+15.6$, then $+44.7$, against $+1.8$ when $p$ is known). The best cap also shortens ($75 \to 60 \to 30$), close to where the DP gives up on the policy map (76, 73, 55 and 34 rolls). The caps are not exact matches only because the sweep tried 1, 2, 3, 5, 10, 15, 20, 25, 30, 40, 50, 60, 75 and 90 attempts.
 
 On this one-uncertain-event setup, the best fixed cap is as good as the DP (within $0.5$). The DP's value is that it finds that $N$ from the belief. A player who picks $N$ by hand has to already know roughly how unsure they are.
 
@@ -361,8 +372,6 @@ On this one-uncertain-event setup, the best fixed cap is as good as the DP (with
 \caption{H5: DP, always-reload, and the best rare-drop-only cap.}
 \label{fig:H5}
 \end{figure}
-
-\need{Yusif}{You own the H5 figure: if Fig.~\ref{fig:H5} still plots the unfair every-event \texttt{fixed\_k} bars, switch it to the rare-drop-only recheck (\texttt{dp/out/h5\_recheck.csv}).}
 
 \subsection{Two game sessions on the same engine\who{Yera}}
 \label{sec:games}
@@ -387,7 +396,7 @@ Never / efficiency-greedy & $8.14 \pm 0.27$ \\
 \end{tabular}
 \end{table}
 
-DP equals always-reload on every seed. All four shrines have the same odds and similar reward per second, and travel ($\sim$5.5\,min) costs more than a reset ($\sim$1.5--2.5\,min), so moving on early never pays. This is H1's ``near-zero edge'' case on a real route: the simple habit is already the policy. The synthetic sweeps are where looking ahead matters.
+DP equals always-reload on every seed. All four shrines have the same odds and similar reward per second, and travel ($\sim$5.5\,min) costs more than a reset ($\sim$1.5--2.5\,min), so moving on early never pays. This is not H1's near-zero edge, which comes from a budget that is very tight or very loose. Here the route itself removes the trade-off: moving on costs a $\sim$5.5\,min walk to face the same 8\% odds at the next shrine, while staying costs a 1.5--2.5\,min reset for the same 8\%. When staying is always the cheaper way to buy another roll, always-reload already is the best policy. Looking ahead only pays when events differ in odds, reward or cost, as in the synthetic sweeps.
 
 \begin{figure}[H]
 \centering
@@ -395,8 +404,6 @@ DP equals always-reload on every seed. All four shrines have the same odds and s
 \caption{Pok\'emon SV main: mean reward by strategy.}
 \label{fig:pokemon}
 \end{figure}
-
-\need{Roy}{One paragraph of player-facing interpretation: why nature rather than shiny, and that the 20/30/20/30 rewards are stated preferences. Sensitivity (all rewards 25) can go here or in limitations.}
 
 \paragraph{Path of Exile Exarch contrast.}
 $\mathrm{Beta}(1,49)$ on the 2\% unique; timings copied from the H5 sessions, not from footage.
@@ -422,8 +429,6 @@ Never & $6.91 \pm 0.51$ \\
 
 DP beats always-reload by about $15.6$, which is the H5 $\mathrm{Beta}(1,49)$ result with Path of Exile names. Fixed-$k = 5$ here again caps every event, so it is not the H5 test; Table~\ref{tab:H5} is.
 
-\need{Vivian}{You own the Path of Exile snapshot: add the league, snapshot date, and that the 2\% figure is a community estimate, not an official drop rate.}
-
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.88\textwidth]{analysis/experiment_poe_chart.png}
@@ -436,30 +441,42 @@ Look ahead when time is limited and the next event is valuable enough (H1, H3), 
 
 %======================================================================
 \section{Discussion, limitations, feasibility, ethics and conclusion}
-\subsection{Critical interpretation\who{Yusif}}
-\need{Yusif}{Write this subsection. Points already supported by the experiment section: (1)~H1 holds on the synthetic budget sweep; (2)~H3 holds on the later-prize sweep; (3)~H5: a cap helps a little when odds are known and a lot when they are not (Table~\ref{tab:H5}); (4)~on the Pok\'emon route DP $=$ always-reload; (5)~a well-chosen cap $\approx$ DP on one uncertain event.}
+\subsection{Critical interpretation\who{Daniel}}
+All three hypotheses hold on the synthetic sessions, but each one comes with a qualification.
 
-\subsection{Pok\'emon reading\who{Roy}}
-\need{Roy}{You own the Pok\'emon case: 3--6 sentences on whether a player would actually follow the DP, given that shrine travel dominates reset time.}
+\textbf{H1 holds.} The DP's lead over the best simple rule is small at 10 minutes ($0.1 \pm 0.2$), largest at 30 minutes ($18.7 \pm 0.6$) and small again at 120 minutes ($2.1 \pm 0.2$). The more useful finding is that the best simple rule changes with the budget: efficiency-greedy when time is tight, a cap of five in the middle, always-reload when time is loose. A player who sticks to one habit is right at one budget and wrong at the others.
 
-\subsection{Limitations\who{Yusif}}
-\need{Yusif}{Write limitations: independent rolls; fixed event order; two illustrations do not cover every genre; H3 and H5 had to be rebuilt because the first files could not test the hypotheses.}
+\textbf{H3 holds.} Once the later prize is worth 80, the DP stops retrying the early event entirely, and always-reload falls behind by 4.1 (at 80) and 16.8 (at 160). Below 40 the two are identical. The flip is sharp: the policy goes from 30 planned retries to 18 to none as the later reward goes from 20 to 40 to 80.
 
-\need{Roy}{You own the case-study caveats: rewards are stated preferences; video timings are means from public videos, not lab measurements.}
+\textbf{H5 holds, but not in the form we first wrote it.} The plan said a retry cap should only help when the odds are unknown. In fact a cap also helps a little with known odds ($+1.8$), because the later event still needs time. The uncertainty effect is what comes on top: $+15.6$ for $\mathrm{Beta}(1,49)$ and $+44.7$ for $\mathrm{Beta}(0.2,9.8)$. The simulator's built-in caps also had to be set aside, because they cap every event at once and lose for a reason that has nothing to do with uncertainty.
 
-\subsection{Feasibility\who{Yusif}}
-\need{Yusif}{The prototype already runs; figures are produced from scripts; remaining work is the 10-minute talk. State runtime for 10{,}000 seeds if you have it.}
+\textbf{The DP is not magic.} On one uncertain event, a well-chosen cap does as well as the DP (within 0.5). On the Pok\'emon route, always-reload is exactly as good. The DP's real value is that it chooses the right simple rule for each situation: it picks the cap from the belief, and it switches rules when the budget or the later prize changes. A player who already knows the right $N$ does not need it. A player who does not know $N$, or whose session changes, does.
 
-\subsection{Ethics\who{Yusif}}
-\need{Yusif}{Freeze the ethics paragraph from the project plan: no surveys; public odds and public videos only; timestamps not re-uploaded footage; no live scrape, no ToS bots; no moral claim about save-scumming.}
+\subsection{Pok\'emon reading\who{Daniel}}
+Would a real player follow the DP on this route? Yes, because here the DP says exactly what most players already do: keep resetting at a shrine until the nature is right, then move on. A reset takes 1.5 to 2.5 minutes and the walk to the next shrine takes over 5, so giving up on a shrine never buys a cheaper shot at the same 8\% odds. We targeted natures rather than shinies because static encounters in \emph{Scarlet} and \emph{Violet} are shiny-locked, so a shiny reset is not a fresh roll. The rewards (20, 30, 20, 30) are our stated preferences, not prices. As a sensitivity check we re-solved the session with every shrine worth 25: the policy still never gives up on a shrine, so the conclusion does not depend on how we ranked them.
 
-\subsection{Future work}
-\need{Yusif}{Method directions: branching routes; non-zero farm entry costs; sensitivity on the efficiency cutoff $\kappa$.}
+\subsection{Limitations\who{Daniel}}
+\begin{itemize}
+\item \textbf{Independent rolls and a fixed order.} Every attempt is assumed independent, and events come in a fixed order with no branching. Games with pity timers, seeded RNG or open routes break these assumptions.
+\item \textbf{Rewards are points, not values.} The Pok\'emon rewards are stated preferences and the Path of Exile rewards are not market prices. The Pok\'emon conclusion survived equal rewards, but other games may be more sensitive.
+\item \textbf{Timings are averages from public videos.} Each retry time is the mean of three videos and each travel time the mean of two. A different player, route or console would change them.
+\item \textbf{The Path of Exile prior is a choice.} $\mathrm{Beta}(1,49)$ has the right 2\% mean but is weaker than the 317-run community sample would justify. Its timings are copied from the H5 sessions. It illustrates unknown odds; it is not a farming calculator.
+\item \textbf{Simple rules were not all tuned.} The fixed-$k$ caps were tested at 2, 3 and 5, and the efficiency cutoff was fixed at 0.10. Better-tuned simple rules would narrow some gaps, which is part of why we report the best rule at each setting rather than one fixed comparison.
+\item \textbf{Two of the sweeps were rebuilt.} The first H3 and H5 files could not test their hypotheses: the later event was won too easily, and the rare drop was too slow to retry. We rebuilt them and say so in Section~\ref{sec:H3} and Section~\ref{sec:H5}. The results stand, but they come from sessions designed so that the effect could appear.
+\item \textbf{Two illustrations do not cover every genre.} Pok\'emon and Path of Exile show that the model can be filled in from published numbers, not that it fits every game.
+\end{itemize}
 
-\need{Roy}{Case-study directions: a dated Path of Exile price used as $g_i$ only if Vivian supplies it.}
+\subsection{Feasibility\who{Daniel}}
+The prototype already runs end to end, and every figure in this report is produced by a script in the repository. Solving one session's policy takes under a second. Simulating all eight strategies on 10,000 seeds takes about two seconds, so the full set of experiments reruns in a few minutes on a standard computer. Automated tests cover the solver, the simulator and the input files, and all 68 pass. No game access, special hardware or paid data is needed. The remaining work is the 10-minute presentation.
 
-\subsection{Conclusion\who{Yusif}}
-\need{Yusif}{Close on the line already in the abstract: retry only when the expected gain beats the value of the same minutes later. Cite Tables~\ref{tab:H1}, \ref{tab:H3} and \ref{tab:H5}.}
+\subsection{Ethics\who{Daniel}}
+The project does not involve human subjects: there are no surveys, interviews or recordings of players. We use published odds, community estimates and public videos, and we recorded timestamps rather than re-uploading any footage. We did not scrape live markets, modify game clients or run bots on game servers, so terms-of-service issues do not arise. We take no position on whether save-scumming is good or bad play. We evaluate how to allocate time, not how people should enjoy games.
+
+\subsection{Future work\who{Daniel}}
+On the method side, the model could allow branching routes and a choice of which event to visit next, which brings it closer to Weitzman's search problem. Farming with a real entry cost ($e_i > 0$) and loot kept after a failure ($h_i > 0$) is already in the equations of the project plan but untested here. The simple rules could also be tuned properly, for example by searching for the best efficiency cutoff per session, to see how much of the DP's lead survives against the strongest possible simple rule. On the case-study side, a dated Path of Exile price snapshot could replace the point rewards, and the Pok\'emon timings could be re-measured from more videos.
+
+\subsection{Conclusion\who{Daniel}}
+A retry is worth it only when its expected gain beats what the same minutes are worth later. When time is short and the next event is valuable (Tables~\ref{tab:H1} and~\ref{tab:H3}), or when each failure should make a player doubt the odds (Table~\ref{tab:H5}), looking ahead pays off, by up to 18.7 reward units in our budget sweep and 44.7 under a weak prior. When every event looks the same and moving on costs more than retrying, as on our Pok\'emon route, the simple habit is already optimal. The practical lesson is not ``always use the DP''. It is that no single habit is right everywhere, and the DP is a reliable way to find which habit fits the session in front of you.
 
 %======================================================================
 \section{References\who{Vivian}}
@@ -517,7 +534,7 @@ T.~J.~Sargent and J.~Stachurski, \emph{Dynamic Programming: Finite States}. Camb
 \midrule
 Vu Q.\ Nguyen \textit{(Daniel)}
 & 3036755728
-& DP solver, policy maps, Beta module, H5 recheck and the policy-map figure. Wrote the report sections on background and context, problem definition, research gap, technical design, analytical approach and methodology. \\
+& DP solver, policy maps, Beta module, H5 recheck and the policy-map figure. Wrote the report sections on background and context, problem definition, research gap, technical design, analytical approach and methodology, and drafted the discussion section (critical interpretation to conclusion). \\
 \addlinespace
 Yerassyl Taisarinov \textit{(Yera)}
 & 3036459776

@@ -39,10 +39,11 @@ def load_and_process_a(sim_dir="sim/out/A"):
 def plot_a(stats_df, output_path="analysis/experiment_a_chart.png"):
     plt.figure(figsize=(10, 6))
     
-    target_strategies = ['dp', 'always', 'efficiency_greedy', 'reward_greedy']
+    target_strategies = ['dp', 'always', 'fixed_k_5', 'efficiency_greedy', 'reward_greedy']
     styles = {
         'dp': {'fmt': '-o', 'color': 'royalblue', 'lw': 2.5, 'label': 'DP Strategy'},
         'always': {'fmt': '-s', 'color': 'crimson', 'lw': 2, 'label': 'Always-Reload'},
+        'fixed_k_5': {'fmt': '-v', 'color': 'slategray', 'lw': 2, 'label': 'Fixed-k = 5'},
         'efficiency_greedy': {'fmt': '-^', 'color': 'forestgreen', 'lw': 2, 'label': 'Efficiency-Greedy'},
         'reward_greedy': {'fmt': '-d', 'color': 'darkorange', 'lw': 1.5, 'label': 'Reward-Greedy'}
     }
@@ -66,7 +67,7 @@ def plot_a(stats_df, output_path="analysis/experiment_a_chart.png"):
         
     plt.xlabel('Time Budget ($T$ in minutes)', fontsize=11, fontweight='bold')
     plt.ylabel('Mean Total Reward', fontsize=11, fontweight='bold')
-    plt.title('Experiment A: Strategy Comparison across Time Budgets (H1 Test)', fontsize=12, fontweight='bold')
+    plt.title('H1: Strategy Comparison across Time Budgets', fontsize=12, fontweight='bold')
     
     # Force explicit numerical ticks at data points while preserving true scale
     plt.xticks([10, 20, 30, 60, 120])
@@ -84,7 +85,7 @@ def plot_a(stats_df, output_path="analysis/experiment_a_chart.png"):
 def main():
     df = load_and_process_a()
     print("=== EXPERIMENT A (H1) COMPARATIVE SUMMARY ===")
-    print(df[df['strategy'].isin(['dp', 'always', 'efficiency_greedy', 'reward_greedy'])].to_string(index=False))
+    print(df[df['strategy'].isin(['dp', 'always', 'fixed_k_5', 'efficiency_greedy', 'reward_greedy'])].to_string(index=False))
     plot_a(df)
 
 if __name__ == '__main__':
