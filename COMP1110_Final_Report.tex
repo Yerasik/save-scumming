@@ -69,7 +69,7 @@ So we ask: when should a player accept a bad outcome or retry if several encount
 We report three tests, named after the hypotheses in the project plan rather than the folder letters A--D. \textbf{H1} asks whether looking ahead helps most when the clock is tight but not empty. \textbf{H3} asks whether a valuable later event can make retrying an earlier one a mistake. \textbf{H5} asks whether, when the odds are unknown, a retry cap can beat retrying until success. The repository also has probability and retry-cost sweeps (B and C); they are not in this report, because they do not test those three claims. There is no H2 or H4 here: those were never lead hypotheses. Naming the runs H1, H3 and H5 keeps each table tied to a claim instead of a file name.
 
 %======================================================================
-\section{Background and context\who{Vivian}}
+\section{Background and context\who{Daniel}}
 Save-scumming means saving just before a random event and reloading until the result is good enough. It is how players chase the right nature on a legendary Pok\'emon, a good loot roll, or a passed dialogue check. A related habit is farming: repeating a boss or a map for a rare drop. In both cases one attempt is cheap but a long string of them is not, so we use ``retry'' and ``reload'' to mean the same thing.
 
 For one event on its own, deciding whether to retry is easy: compare the chance of success and the reward against the time. It gets harder when several events come in a row and share one playtime budget. Every retry on the current event uses time that could go to a later one. Chasing a 5\% roll can make sense when nothing valuable is left, and be a poor use of the same minutes when a better event is still ahead. So the same failed roll can call for different actions depending on where the player is in the session.
@@ -77,7 +77,7 @@ For one event on its own, deciding whether to retry is easy: compare the chance 
 Players rarely set a budget for themselves, but real life does it for them: class the next morning, a limited-time in-game event, the end of an online season. Anything not reached before then is missed. We call this the limited-playtime setting, and it is the main focus of this report. A second complication is that the odds are not always known. Pok\'emon natures follow a published rule (1 in 25 each). Many drop rates in Path of Exile are only community estimates, so a player who keeps failing should start to doubt the estimate.
 
 %======================================================================
-\section{Problem definition\who{Vivian}}
+\section{Problem definition\who{Daniel}}
 A session is a fixed sequence of $n$ events played in order, with a total time budget of $T$ seconds. Event $i$ has:
 \begin{itemize}
 \item a success chance $p_i$ per attempt. If the odds are not published, the player holds a $\mathrm{Beta}(\alpha_i, \beta_i)$ belief about $p_i$ instead;
@@ -103,9 +103,9 @@ The decision also concerns costly search. Weitzman~\cite{weitzman1979} considers
 
 Another challenge is knowing when the odds are unknown. DeGroot~\cite{degroot2004} gives a framework for updating beliefs based on observations and making decisions based on the beliefs. Russo et al.~\cite{russo2018} explain that an action can provide both immediate reward and information that can be used to make better decisions in the future. In our project, a failed attempt is time-consuming and gives information about the unknown success probability. We model that uncertainty with a Beta distribution. Failures can decrease the player's estimate of success, but the underlying probability does not change.
 
-The other two sources connect these ideas to the method of the project. Kleinberg, Slivkins and Badanidiyuru~\cite{badanidiyuru2018} consider the problem of learning and collecting rewards in the setting of actions consuming a limited resource. That work helps to explain the value of an attempt by noting what else the player might do with the same amount of time. Dynamic programming appraises decisions with consequences that affect subsequent decisions~\cite{sargent2025}. The framework that they gave allows us to compare retrying now versus moving on with more time left.
+The other two sources connect these ideas to the method of the project. Badanidiyuru, Kleinberg and Slivkins~\cite{badanidiyuru2018} consider the problem of learning and collecting rewards in the setting of actions consuming a limited resource. That work helps to explain the value of an attempt by noting what else the player might do with the same amount of time. Dynamic programming appraises decisions with consequences that affect subsequent decisions~\cite{sargent2025}. The framework that they gave allows us to compare retrying now versus moving on with more time left.
 
-\subsection{Research gap}
+\subsection{Research gap\who{Daniel}}
 Each strand of work above covers part of our problem, but none covers all of it. Save-scumming research~\cite{farmer2025} studies why players reload, not whether a reload is worth the time. Restart models~\cite{luby1993,lorenz2016} ask when to retry, but for a single task with nothing else to move on to. Weitzman's~\cite{weitzman1979} search model lets the searcher pick any option next, whereas a player has to follow the game's route, travel time included. Bandits with Knapsacks~\cite{badanidiyuru2018} combines learning with a limited budget, but it has no fixed order of named events.
 
 In the work we reviewed, we did not find a model that splits one real-time budget across several game events in a fixed order, gives an accept-or-retry decision for each, and still works when the odds are unknown and have to be learned from failures. Our project combines dynamic programming with a Beta belief to fill that gap. It also asks a practical question that the theory alone does not answer: how much better is the best policy than the simple rules players actually use?
@@ -114,7 +114,7 @@ In the work we reviewed, we did not find a model that splits one real-time budge
 
 %======================================================================
 \section{Technical design, analytical approach and methodology}
-\subsection{Technical design\who{Vivian}}
+\subsection{Technical design\who{Daniel}}
 The project is a Python prototype, not an app. The code, session files, policies and experiment outputs are in the GitHub repository \url{https://github.com/Yerasik/save-scumming}. It has four parts, linked by plain files so each person could work on their own part:
 \begin{itemize}
 \item \textbf{Session files (JSON).} Each session lists its events with $p$ (or $\alpha$ and $\beta$), $g$, $b$, $c$, $f$, and the budget $T$. The format was fixed early, so synthetic sessions and the Pok\'emon session use exactly the same fields.
@@ -124,7 +124,7 @@ The project is a Python prototype, not an app. The code, session files, policies
 \end{itemize}
 Keeping the solver and the simulator separate matters. If the DP's predicted value and the simulator's result agree, that is evidence both are correct, because they were written independently.
 
-\subsection{Analytical approach\who{Vivian}}
+\subsection{Analytical approach\who{Daniel}}
 \label{sec:dp}
 After any decision, the rest of the problem is fully described by three numbers: the current event $i$, the seconds left $t$, and the number of failures $k$ at this event so far. Let $V(i,t,k)$ be the best expected reward from here on, $W(i,t,k)$ the same value just after a failure, and $N(i,t)$ the value of moving on to the next event:
 \begin{align}
@@ -183,7 +183,7 @@ Every result below is 10,000 Monte Carlo sessions per strategy. Seeds are $0$ th
 
 \need{Vivian}{Path of Exile snapshot (you own this): date 2026-11-05, league Mercenaries 3.26, source of the 2\% figure, and that prices were left unobserved.}
 
-\subsection{Methodology\who{Vivian}}
+\subsection{Methodology\who{Daniel}}
 \label{sec:method}
 We compare the DP policy with the simple rules a real player might follow:
 
@@ -517,7 +517,7 @@ T.~J.~Sargent and J.~Stachurski, \emph{Dynamic Programming: Finite States}. Camb
 \midrule
 Vu Q.\ Nguyen \textit{(Daniel)}
 & 3036755728
-& \textbf{[Daniel]} DP solver, policy maps, Beta module, H5 recheck. Confirm this sentence. \\
+& DP solver, policy maps, Beta module, H5 recheck and the policy-map figure. Wrote the report sections on background and context, problem definition, research gap, technical design, analytical approach and methodology. \\
 \addlinespace
 Yerassyl Taisarinov \textit{(Yera)}
 & 3036459776
@@ -533,7 +533,7 @@ Yusif Seyidov \textit{(Yusif)}
 \addlinespace
 Vivaan Kandhari \textit{(Vivian)}
 & 3036684400
-& \textbf{[Vivian]} Synthetic sessions, literature, $\rho$-baseline, Path of Exile snapshot, and the abstract through methodology draft in this file. Confirm this sentence. \\
+& \textbf{[Vivian]} Synthetic sessions, literature, $\rho$-baseline, Path of Exile snapshot, and the abstract, introduction and existing-literature sections of the report. Confirm this sentence. \\
 \bottomrule
 \end{tabularx}
 \end{table}
