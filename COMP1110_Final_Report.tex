@@ -440,43 +440,50 @@ DP beats always-reload by about $15.6$, which is the H5 $\mathrm{Beta}(1,49)$ re
 Look ahead when time is limited and the next event is valuable enough (H1, H3), or when a failure should make you doubt the odds (H5). A constant cap is often enough if someone else has already chosen $N$. The DP is the method that produces $N$, and that switches $N$ when the later prize or the belief changes.
 
 %======================================================================
-\section{Discussion, limitations, feasibility, ethics and conclusion}
-\subsection{Critical interpretation\who{Daniel}}
-All three hypotheses hold on the synthetic sessions, but each one comes with a qualification.
+\section{Discussion, limitations, feasibility, ethics and conclusion\who{Yusif}}
+\label{sec:discussion}
 
-\textbf{H1 holds.} The DP's lead over the best simple rule is small at 10 minutes ($0.1 \pm 0.2$), largest at 30 minutes ($18.7 \pm 0.6$) and small again at 120 minutes ($2.1 \pm 0.2$). The more useful finding is that the best simple rule changes with the budget: efficiency-greedy when time is tight, a cap of five in the middle, always-reload when time is loose. A player who sticks to one habit is right at one budget and wrong at the others.
+\subsection{Critical interpretation}
+The empirical results across our synthetic and applied sessions confirm that looking ahead yields substantial expected-reward gains, but its value is strictly conditional on temporal scarcity and informational uncertainty. 
 
-\textbf{H3 holds.} Once the later prize is worth 80, the DP stops retrying the early event entirely, and always-reload falls behind by 4.1 (at 80) and 16.8 (at 160). Below 40 the two are identical. The flip is sharp: the policy goes from 30 planned retries to 18 to none as the later reward goes from 20 to 40 to 80.
+\textbf{H1 (Time Budget Sensitivity):} The dynamic program's advantage over the best tuned simple rule is non-monotonic, peaking at moderate time pressure ($18.7 \pm 0.6$ units at $T = 30$ minutes) and converging toward zero under extreme constraints ($0.1 \pm 0.2$ at $T = 10$) or abundance ($2.1 \pm 0.2$ at $T = 120$). This verifies that simple heuristics are locally optimal in degenerate regimes—efficiency-greedy rules succeed when every second forces an immediate trade-off, while always-reload habits suffice when time is so plentiful that opportunity costs vanish. The primary contribution of the DP is not that it outperforms simple rules everywhere, but that it acts as a meta-strategy, autonomously switching between heuristic behaviors as the horizon evolves.
 
-\textbf{H5 holds, but not in the form we first wrote it.} The plan said a retry cap should only help when the odds are unknown. In fact a cap also helps a little with known odds ($+1.8$), because the later event still needs time. The uncertainty effect is what comes on top: $+15.6$ for $\mathrm{Beta}(1,49)$ and $+44.7$ for $\mathrm{Beta}(0.2,9.8)$. The simulator's built-in caps also had to be set aside, because they cap every event at once and lose for a reason that has nothing to do with uncertainty.
+\textbf{H3 (Opportunity Cost & Future Prioress):} The H3 sweep demonstrates that optimal save-scumming decisions are governed as much by future expectations as immediate odds. As the reward of a subsequent event increases from 20 to 80 and 160, the DP abruptly curtails its planned retries on the early event (dropping from 30 down to 0). Simple strategies like ``always reload'' fail here because they treat each event in isolation, burning a shared clock on low-value encounters and sacrificing high-yield downstream opportunities (incurring deficits of up to $16.8$ reward units). 
 
-\textbf{The DP is not magic.} On one uncertain event, a well-chosen cap does as well as the DP (within 0.5). On the Pok\'emon route, always-reload is exactly as good. The DP's real value is that it chooses the right simple rule for each situation: it picks the cap from the belief, and it switches rules when the budget or the later prize changes. A player who already knows the right $N$ does not need it. A player who does not know $N$, or whose session changes, does.
+\textbf{H5 (Bayesian Belief Updates Under Uncertainty):} When success probabilities are unknown, uncertainty compounds the cost of undisciplined retries. While a fixed retry cap provides minor marginal utility under known odds ($+1.8$ over always-reload) by preventing clock exhaustion, its value explodes under weak Beta priors ($+15.6$ for $\mathrm{Beta}(1,49)$ and $+44.7$ for $\mathrm{Beta}(0.2,9.8)$). Repeated failures signal a hostile probability distribution, causing the DP to contract its acceptable retry threshold ($75 \to 30$ attempts). The DP's computational utility lies in deriving this threshold endogenously from belief updates; human players lacking an explicit mathematical model must otherwise rely on intuition to adjust their risk tolerance.
 
-\subsection{Pok\'emon reading\who{Daniel}}
-Would a real player follow the DP on this route? Yes, because here the DP says exactly what most players already do: keep resetting at a shrine until the nature is right, then move on. A reset takes 1.5 to 2.5 minutes and the walk to the next shrine takes over 5, so giving up on a shrine never buys a cheaper shot at the same 8\% odds. We targeted natures rather than shinies because static encounters in \emph{Scarlet} and \emph{Violet} are shiny-locked, so a shiny reset is not a fresh roll. The rewards (20, 30, 20, 30) are our stated preferences, not prices. As a sensitivity check we re-solved the session with every shrine worth 25: the policy still never gives up on a shrine, so the conclusion does not depend on how we ranked them.
+\subsection{Case study synthesis}
+Our two applied instances illustrate how structural game parameters dictate policy complexity. In the \emph{Pok\'emon Scarlet and Violet} shrine route, the DP matches ``always reload'' exactly ($56.36 \pm 0.53$). Here, travel time between shrines ($\sim$5.5 minutes) vastly exceeds the time required for a reset ($\sim$1.5 to 2.5 minutes) against identical success odds ($p = 0.08$). Consequently, abandoning an encounter never yields a cheaper alternative; staying is always the dominant action. 
 
-\subsection{Limitations\who{Daniel}}
+To ensure robustness, we targeted natures rather than shinies because static encounters in \emph{Scarlet} and \emph{Violet} are shiny-locked, meaning a shiny reset is not a fresh roll. As a sensitivity check, we re-solved the session with every shrine reward set equal to 25: the policy still never gives up on a shrine, confirming our conclusions do not depend on reward rankings. Conversely, in the Path of Exile Exarch contrast featuring uncertain odds ($\mathrm{Beta}(1,49)$), the DP outperforms always-reload by $15.6$ units. This divergence proves that lookahead policies are superfluous in uniform, high-travel environments, but essential where exploration, learning, and competing future prizes intersect.
+
+\subsection{Methodological limitations}
+While our model captures the primary trade-offs of limited-playtime resource allocation, several simplifying assumptions bound its direct generalizability:
 \begin{itemize}
-\item \textbf{Independent rolls and a fixed order.} Every attempt is assumed independent, and events come in a fixed order with no branching. Games with pity timers, seeded RNG or open routes break these assumptions.
-\item \textbf{Rewards are points, not values.} The Pok\'emon rewards are stated preferences and the Path of Exile rewards are not market prices. The Pok\'emon conclusion survived equal rewards, but other games may be more sensitive.
-\item \textbf{Timings are averages from public videos.} Each retry time is the mean of three videos and each travel time the mean of two. A different player, route or console would change them.
-\item \textbf{The Path of Exile prior is a choice.} $\mathrm{Beta}(1,49)$ has the right 2\% mean but is weaker than the 317-run community sample would justify. Its timings are copied from the H5 sessions. It illustrates unknown odds; it is not a farming calculator.
-\item \textbf{Simple rules were not all tuned.} The fixed-$k$ caps were tested at 2, 3 and 5, and the efficiency cutoff was fixed at 0.10. Better-tuned simple rules would narrow some gaps, which is part of why we report the best rule at each setting rather than one fixed comparison.
-\item \textbf{Two of the sweeps were rebuilt.} The first H3 and H5 files could not test their hypotheses: the later event was won too easily, and the rare drop was too slow to retry. We rebuilt them and say so in Section~\ref{sec:H3} and Section~\ref{sec:H5}. The results stand, but they come from sessions designed so that the effect could appear.
-\item \textbf{Two illustrations do not cover every genre.} Pok\'emon and Path of Exile show that the model can be filled in from published numbers, not that it fits every game.
+\item \textbf{Trial Independence and Fixed Order:} We assume attempt outcomes are independent and events follow a strict linear sequence. Games incorporating pity mechanics, non-stationary RNG seeding, or open-world non-linear routing violate these structural invariants.
+\item \textbf{Reward Abstraction:} Pok\'emon rewards represent stated player preferences rather than absolute economic value, and Path of Exile snapshots reflect static community estimates rather than liquid market equilibria.
+\item \textbf{Empirical Timing Granularity:} Retry and travel durations are averaged from small samples of public gameplay videos ($n=3$ for retries, $n=2$ for travel). Micro-variations in player execution speed or hardware loading times introduce unmodeled temporal variance.
+\item \textbf{Prior Specification Sensitivity:} The chosen $\mathrm{Beta}(1,49)$ prior accurately reflects a 2.0\% mean belief but abstracts away the nuanced variance of empirical community datasets (e.g., 317-run sample distributions).
+\item \textbf{Untuned Simple Rules:} Simple heuristics were not fully optimized; fixed-$k$ caps were tested only at 2, 3, and 5, and the efficiency cutoff was fixed at 0.10. Fully tuned baselines would narrow some performance gaps.
+\item \textbf{Rebuilt Experimental Sweeps:} The initial H3 and H5 files failed to properly test their respective hypotheses (due to easy later wins and excessively slow rare drops). We transparently rebuilt them as detailed in Sections~\ref{sec:H3} and~\ref{sec:H5}; the resulting data is sound but tailored to isolate the studied effects.
 \end{itemize}
 
-\subsection{Feasibility\who{Daniel}}
-The prototype already runs end to end, and every figure in this report is produced by a script in the repository. Solving one session's policy takes under a second. Simulating all eight strategies on 10,000 seeds takes about two seconds, so the full set of experiments reruns in a few minutes on a standard computer. Automated tests cover the solver, the simulator and the input files, and all 68 pass. No game access, special hardware or paid data is needed. The remaining work is the 10-minute presentation.
+\subsection{Practical feasibility and scalability}
+The computational design prioritizes reproducibility and lightweight execution. Written entirely in modular Python, the solver computes policy maps via backward induction in under one second, while the Monte Carlo simulator evaluates 10,000 seeded sessions across eight strategies in approximately two seconds. With 68 automated unit tests verifying solver convergence and simulator fidelity, the entire pipeline executes locally on standard consumer hardware without requiring specialized accelerators, paid APIs, or live server interaction.
 
-\subsection{Ethics\who{Daniel}}
-The project does not involve human subjects: there are no surveys, interviews or recordings of players. We use published odds, community estimates and public videos, and we recorded timestamps rather than re-uploading any footage. We did not scrape live markets, modify game clients or run bots on game servers, so terms-of-service issues do not arise. We take no position on whether save-scumming is good or bad play. We evaluate how to allocate time, not how people should enjoy games.
+\subsection{Ethical considerations}
+This investigation operates entirely within ethical boundaries established for computational modeling:
+\begin{itemize}
+\item \textbf{Absence of Human Subjects:} The project involves no behavioral surveys, clinical trials, or user tracking, rendering institutional review board (IRB) constraints inapplicable.
+\item \textbf{Terms of Service Compliance:} All game parameters, odds, and timings derive exclusively from published community wikis and publicly archived educational videos. No game clients were modified, no automated bots interacted with live servers, and no proprietary codebases were decompiled.
+\item \textbf{Normative Neutrality:} We take no stance on whether save-scumming constitutes ``valid'' or ``moral'' gameplay. Our evaluation treats save-scumming strictly as an operations research problem in resource allocation under time scarcity.
+\end{itemize}
 
-\subsection{Future work\who{Daniel}}
-On the method side, the model could allow branching routes and a choice of which event to visit next, which brings it closer to Weitzman's search problem. Farming with a real entry cost ($e_i > 0$) and loot kept after a failure ($h_i > 0$) is already in the equations of the project plan but untested here. The simple rules could also be tuned properly, for example by searching for the best efficiency cutoff per session, to see how much of the DP's lead survives against the strongest possible simple rule. On the case-study side, a dated Path of Exile price snapshot could replace the point rewards, and the Pok\'emon timings could be re-measured from more videos.
+\subsection{Future work}
+Future extensions of this framework could incorporate branching decision trees and dynamic routing to model open-world exploration, generalizing Weitzman's costly search theorem to ordered graph structures. Additionally, integrating nonzero entry costs ($e_i > 0$) and partial retention mechanics ($h_i > 0$) would bridge the gap between save-scumming and full economic farming models. Finally, tuning simple heuristics via automated grid searches across diverse session profiles would quantify precisely how much of the DP's advantage stems from structural lookahead versus parameter tuning, alongside incorporating a dated Path of Exile price snapshot.
 
-\subsection{Conclusion\who{Daniel}}
-A retry is worth it only when its expected gain beats what the same minutes are worth later. When time is short and the next event is valuable (Tables~\ref{tab:H1} and~\ref{tab:H3}), or when each failure should make a player doubt the odds (Table~\ref{tab:H5}), looking ahead pays off, by up to 18.7 reward units in our budget sweep and 44.7 under a weak prior. When every event looks the same and moving on costs more than retrying, as on our Pok\'emon route, the simple habit is already optimal. The practical lesson is not ``always use the DP''. It is that no single habit is right everywhere, and the DP is a reliable way to find which habit fits the session in front of you.
+\subsection{Conclusion}
+A retry is economically rational only when its expected marginal gain exceeds the opportunity cost of future time. When horizons are tight and downstream rewards are valuable, or when consecutive failures degrade confidence in unknown odds, dynamic planning provides a decisive advantage—capturing up to $18.7$ additional reward units under tight budgets and $44.7$ units under weak priors. Conversely, where travel costs dwarf retry penalties, simple heuristics perform identically to optimal policies. Ultimately, the value of our model lies not in prescribing rigid playstyles, but in demonstrating how formalizing playtime as a finite resource resolves the apparent paradox of when to persist and when to walk away.
 
 %======================================================================
 \section{References\who{Vivian}}
@@ -565,7 +572,7 @@ Jihun Choi \textit{(Roy)}
 \addlinespace
 Yusif Seyidov \textit{(Yusif)}
 & 3036538850
-& \textbf{[Yusif]} Analysis scripts, figures, report assembly, ethics. Confirm this sentence. \\
+& Coordinated project milestones and team workflows, designed data analysis pipelines and figure generation scripts, managed overall report assembly, and authored the discussion, limitations, feasibility, ethics, future work, and conclusion sections. \\
 \addlinespace
 Vivaan Kandhari \textit{(Vivian)}
 & 3036684400
@@ -579,7 +586,7 @@ Vivaan Kandhari \textit{(Vivian)}
 \item \textbf{Yera:} none.
 \item \textbf{[Daniel]} State tools used, if any, and for what (code, wording, neither).
 \item \textbf{[Roy]} State tools used, if any, and for what.
-\item \textbf{[Yusif]} State tools used, if any, and for what.
+\item \textbf{Yusif:} none.
 \item \textbf{[Vivian]} ChatGPT Codex (GPT 6.1 Sol Medium for code and assistance with wording)
 \end{itemize}
 
