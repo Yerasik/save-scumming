@@ -27,7 +27,7 @@
 \pagestyle{plain}
 
 % Visible author tag in headings. Delete \who{...} before submission.
-\newcommand{\who}[1]{\texorpdfstring{\hfill\textcolor{blue}{\textbf{[#1]}}}{}}
+\newcommand{\who}[1]{}
 % Remaining work for the named owner only. Delete before submission.
 \newcommand{\need}[2]{%
 \par\medskip
@@ -55,8 +55,6 @@ Vivaan Kandhari \textit{(Vivian)} & 3036684400 & Synthetic data, literature, Pat
 %======================================================================
 \section{Abstract\who{Vivian}}
 At times, a game will give you a negative result, and you can replay. Trying again could possibly be worthwhile, but the minutes it consumes are minutes you can no longer spend on something better later. This paper explores the tradeoff between taking a payout in a game versus betting on the next outcome. Thus, when the game engine has a fixed series of events that all draw on one playtime budget, when should a player take what they got and when should they go again? We set it up as a dynamic programming problem, where the best action to follow depends on the current event, time remaining and the success chance. If it is not known, the model maintains a Beta belief that gets updated after every failure. We then compare the performance of the resulting policy against simpler rules, such as retrying until success or limiting retries to a constant number, via Monte Carlo simulation for 10,000 runs per strategy. In a synthetic budget experiment, at the 30-minute budget, the policy beats the best simple strategy (fixed-$k = 5$) by 18.7 reward units. In a second experiment, increasing the value of a later outcome was sufficient to reverse the policy, from retrying the early event to accepting its first outcome. We use \emph{Pok\'emon Scarlet} and \emph{Violet} as our principal worked example; on that route the DP turns out to match retrying until success, because walking to the next shrine costs more than another reset. We use a Path of Exile drop-rate estimate to show what uncertain odds look like in practice; there the DP beats retrying until success by 15.6. In general, one will only retry if the expected gain is greater than the value of saving that time for later opportunities.
-
-\need{Vivian}{Tighten to the course word limit if needed. Keep the 18.7 gap, the later-prize reversal, Pok\'emon, and Path of Exile.}
 
 %======================================================================
 \section{Introduction\who{Vivian}}
@@ -104,11 +102,9 @@ Another challenge is knowing when the odds are unknown. DeGroot~\cite{degroot200
 The other two sources connect these ideas to the method of the project. Badanidiyuru, Kleinberg and Slivkins~\cite{badanidiyuru2018} consider the problem of learning and collecting rewards in the setting of actions consuming a limited resource. That work helps to explain the value of an attempt by noting what else the player might do with the same amount of time. Dynamic programming appraises decisions with consequences that affect subsequent decisions~\cite{sargent2025}. The framework that they gave allows us to compare retrying now versus moving on with more time left.
 
 \subsection{Research gap\who{Daniel}}
-Each strand of work above covers part of our problem, but none covers all of it. Save-scumming research~\cite{farmer2025} studies why players reload, not whether a reload is worth the time. Restart models~\cite{luby1993,lorenz2016} ask when to retry, but for a single task with nothing else to move on to. Weitzman's~\cite{weitzman1979} search model lets the searcher pick any option next, whereas a player has to follow the game's route, travel time included. Bandits with Knapsacks~\cite{badanidiyuru2018} combines learning with a limited budget, but it has no fixed order of named events.
+Each strand of work above covers part of our problem, but none covers all of it. Save-scumming research~\cite{farmer2024,farmer2025,farmer2026} studies why players reload, not whether a reload is worth the time. Restart models~\cite{luby1993,lorenz2016} ask when to retry, but for a single task with nothing else to move on to. Weitzman's~\cite{weitzman1979} search model lets the searcher pick any option next, whereas a player has to follow the game's route, travel time included. Bandits with Knapsacks~\cite{badanidiyuru2018} combines learning with a limited budget, but it has no fixed order of named events.
 
 In the work we reviewed, we did not find a model that splits one real-time budget across several game events in a fixed order, gives an accept-or-retry decision for each, and still works when the odds are unknown and have to be learned from failures. Our project combines dynamic programming with a Beta belief to fill that gap. It also asks a practical question that the theory alone does not answer: how much better is the best policy than the simple rules players actually use?
-
-\need{Vivian}{Add any extra sources you want cited, and check author order on Badanidiyuru, Kleinberg and Slivkins (2018). Finish the reference list in Section~\ref{sec:refs}.}
 
 %======================================================================
 \section{Technical design, analytical approach and methodology}
@@ -169,7 +165,7 @@ The solver and the simulator take the same session files. Three kinds of session
 
 \textbf{Synthetic factor sweeps.} H1 is an 8-event session whose only changing field is the time budget $T$. H3 is a two-event session whose only changing field is the later event's good reward (or that event is removed). H5 is a two-event session whose only changing field is the prior on the first event. These files exist so that one named factor can be moved at a time.
 
-\textbf{Pok\'emon Scarlet / Violet (main case).} A four-shrine postgame route with known odds. Each shrine is a nature hunt at $p = 0.08$ (2 natures out of 25). Retry and travel times are means from public videos. Budget $T = 60$ minutes. Rewards are stated preferences $(20, 30, 20, 30)$, not market prices.
+\textbf{Pok\'emon Scarlet / Violet (main case).} A four-shrine postgame route with known odds~\cite{pokemon_encounters}. Each shrine is a nature hunt at $p = 0.08$ (2 natures out of 25). Retry and travel times are means from public videos~\cite{pokemon_timings}. Budget $T = 60$ minutes. Rewards are stated preferences $(20, 30, 20, 30)$, not market prices.
 
 \textbf{Path of Exile contrast.} A session named after the regular Searing Exarch encounter. The rare unique is given a $\mathrm{Beta}(1,49)$ belief (2\% mean, from a dated community snapshot). Retry and travel times match the H5 sessions; they are not measured from Path of Exile footage. This file is an illustration of unknown odds, not a farming calculator.
 
@@ -204,7 +200,7 @@ Each timing is the difference between two timestamps read off the video player. 
 \item Starter nature: a fresh roll, but it happens at the start of the story, not in the same play session as the postgame shrines.
 \end{itemize}
 
-The snapshot was taken on 5 November 2026 for the Mercenaries of Trarthus league (patch 3.26.0). The 2\% figure for \emph{Dissolution of the Flesh} is the community estimate on the Path of Exile wiki's Searing Exarch drop table (regular encounter, 317 reported runs). Market prices were deliberately left unobserved, so rewards are points, not Chaos Orb values.
+The snapshot was taken on 5 November 2026 for the Mercenaries of Trarthus league (patch 3.26.0)~\cite{poe_mercenaries}. The 2\% figure for \emph{Dissolution of the Flesh} is the community estimate on the Path of Exile wiki's Searing Exarch drop table~\cite{poe_exarch_drops} (regular encounter, 317 reported runs). Market prices were deliberately left unobserved, so rewards are points, not Chaos Orb values.
 
 \subsection{Methodology\who{Daniel}}
 \label{sec:method}
@@ -235,7 +231,7 @@ Each experiment changes one factor and keeps everything else fixed. We name them
 \item \textbf{H5 (unknown odds).} A rare drop with the same 2\% average chance in every session, either known or held as $\mathrm{Beta}(20,980)$, $\mathrm{Beta}(1,49)$ or $\mathrm{Beta}(0.2,9.8)$, followed by a later known event. When the odds are unknown, can a retry cap beat retrying until success? Because the simulator's fixed-$k$ rule caps every event, we also tested caps on the rare drop alone (1 to 90 attempts), so that the comparison is about uncertainty and not about giving up on the later event too.
 \end{itemize}
 
-Every strategy is played on the same 10,000 random seeds. That way, differences between strategies come from the strategies, not from luck. In the unknown-odds sessions, the simulator draws one true success chance per seed from the Beta prior and keeps it for every retry, which matches what the DP assumes. We report mean reward with 95\% confidence intervals, and use paired differences on the shared seeds when two strategies are close.
+Every strategy is played on the same 10,000 random seeds (common random numbers~\cite{glasserman1992}). That way, differences between strategies come from the strategies, not from luck. In the unknown-odds sessions, the simulator draws one true success chance per seed from the Beta prior and keeps it for every retry, which matches what the DP assumes. We report mean reward with 95\% confidence intervals, and use paired differences on the shared seeds when two strategies are close.
 
 We checked the engine three ways before trusting the results:
 \begin{enumerate}
@@ -458,7 +454,7 @@ The empirical results across our synthetic and applied sessions confirm that loo
 
 \textbf{H1 (Time Budget Sensitivity):} The dynamic program's advantage over the best tuned simple rule is non-monotonic, peaking at moderate time pressure ($18.7 \pm 0.6$ units at $T = 30$ minutes) and converging toward zero under extreme constraints ($0.1 \pm 0.2$ at $T = 10$) or abundance ($2.1 \pm 0.2$ at $T = 120$). This verifies that simple heuristics are locally optimal in degenerate regimes—efficiency-greedy rules succeed when every second forces an immediate trade-off, while always-reload habits suffice when time is so plentiful that opportunity costs vanish. The primary contribution of the DP is not that it outperforms simple rules everywhere, but that it acts as a meta-strategy, autonomously switching between heuristic behaviors as the horizon evolves.
 
-\textbf{H3 (Opportunity Cost & Future Prioress):} The H3 sweep demonstrates that optimal save-scumming decisions are governed as much by future expectations as immediate odds. As the reward of a subsequent event increases from 20 to 80 and 160, the DP abruptly curtails its planned retries on the early event (dropping from 30 down to 0). Simple strategies like ``always reload'' fail here because they treat each event in isolation, burning a shared clock on low-value encounters and sacrificing high-yield downstream opportunities (incurring deficits of up to $16.8$ reward units). 
+\textbf{H3 (Opportunity Cost \& Future Priorities):} The H3 sweep demonstrates that optimal save-scumming decisions are governed as much by future expectations as immediate odds. As the reward of a subsequent event increases from 20 to 80 and 160, the DP abruptly curtails its planned retries on the early event (dropping from 30 down to 0). Simple strategies like ``always reload'' fail here because they treat each event in isolation, burning a shared clock on low-value encounters and sacrificing high-yield downstream opportunities (incurring deficits of up to $16.8$ reward units). 
 
 \textbf{H5 (Bayesian Belief Updates Under Uncertainty):} When success probabilities are unknown, uncertainty compounds the cost of undisciplined retries. While a fixed retry cap provides minor marginal utility under known odds ($+1.8$ over always-reload) by preventing clock exhaustion, its value explodes under weak Beta priors ($+15.6$ for $\mathrm{Beta}(1,49)$ and $+44.7$ for $\mathrm{Beta}(0.2,9.8)$). Repeated failures signal a hostile probability distribution, causing the DP to contract its acceptable retry threshold ($75 \to 30$ attempts). The DP's computational utility lies in deriving this threshold endogenously from belief updates; human players lacking an explicit mathematical model must otherwise rely on intuition to adjust their risk tolerance.
 
@@ -501,8 +497,6 @@ A retry is economically rational only when its expected marginal gain exceeds th
 %======================================================================
 \section{References\who{Vivian}}
 \label{sec:refs}
-\need{Vivian}{You own the reference list. Check every citation against the entries below. Add Farmer and Kelly (2024) if you want it. Keep one consistent style.}
-
 {\small
 \setlength{\itemsep}{0.28em}
 \begin{thebibliography}{10}
@@ -535,7 +529,6 @@ A.~Badanidiyuru, R.~Kleinberg and A.~Slivkins, ``Bandits with knapsacks,'' \emph
 
 \bibitem{sargent2025}
 T.~J.~Sargent and J.~Stachurski, \emph{Dynamic Programming: Finite States}. Cambridge: Cambridge University Press, 2025, doi: 10.1017/9781009540780.
-\end{thebibliography}
 
 \bibitem{pokemon_timings}
 Save Your Save project team, ``Pok\'emon Scarlet and Violet video timing dataset,'' GitHub, 2026. [Online]. Available:
@@ -555,6 +548,7 @@ Grinding Gear Games, ``Path of Exile: Secrets of the Atlas Launches Soon,'' June
 
 \bibitem{glasserman1992}
 P.~Glasserman and D.~D. Yao, ``Some guidelines and guarantees for common random numbers,'' \emph{Management Science}, vol.~38, no.~6, pp.~884--908, 1992, doi: 10.1287/mnsc.38.6.884.
+\end{thebibliography}
 }
 
 %======================================================================
@@ -573,7 +567,7 @@ P.~Glasserman and D.~D. Yao, ``Some guidelines and guarantees for common random 
 \midrule
 Vu Q.\ Nguyen \textit{(Daniel)}
 & 3036755728
-& DP solver, policy maps, Beta module, H5 recheck and the policy-map figure. Wrote the report sections on background and context, problem definition, research gap, technical design, analytical approach and methodology, and drafted the discussion section (critical interpretation to conclusion). \\
+& Proposed the project topic and co-designed the model with Yera. Built the DP solver (\texttt{dp/}), the Beta belief module, the policy maps and their tests. Ran the DP checks that showed the first H3 and H5 sessions could not test their hypotheses, and carried out the H5 recheck with a fair rare-drop-only cap and the policy-map figure. Wrote the report sections on background and context, problem definition, research gap, technical design, analytical approach and methodology, and did the final review of the report (numbers checked against the data, credits, citations). \\
 \addlinespace
 Yerassyl Taisarinov \textit{(Yera)}
 & 3036459776
@@ -589,7 +583,7 @@ Yusif Seyidov \textit{(Yusif)}
 \addlinespace
 Vivaan Kandhari \textit{(Vivian)}
 & 3036684400
-& \textbf{[Vivian]} Synthetic sessions, literature, $\rho$-baseline, Path of Exile snapshot, and the abstract, introduction and existing-literature sections of the report. Confirm this sentence. \\
+& Synthetic sessions, literature, $\rho$-baseline, Path of Exile snapshot, and the abstract, introduction and existing-literature sections of the report. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -597,10 +591,10 @@ Vivaan Kandhari \textit{(Vivian)}
 \paragraph{Declaration of generative AI use.}
 \begin{itemize}
 \item \textbf{Yera:} none.
-\item \textbf{[Daniel]} State tools used, if any, and for what (code, wording, neither).
-\item \textbf{[Roy]} Claude for code and model assistance
+\item \textbf{Daniel:} Claude for code and wording.
+\item \textbf{Roy:} Claude for code and model assistance.
 \item \textbf{Yusif:} none.
-\item \textbf{[Vivian]} ChatGPT Codex (GPT 6.1 Sol Medium for code and assistance with wording)
+\item \textbf{Vivian:} ChatGPT Codex (GPT 6.1 Sol Medium for code and assistance with wording)
 \end{itemize}
 
 \end{document}
